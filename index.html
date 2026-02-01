@@ -212,7 +212,7 @@
                             <tr>
                                 <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Item</th>
                                 <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Category</th>
-                                <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Price</th>
+                                <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Price (IDR)</th>
                                 <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase text-right">Actions</th>
                             </tr>
                         </thead>
@@ -242,8 +242,8 @@
                 
                 <div class="grid grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Price ($)</label>
-                        <input type="number" id="edit-price" step="0.5" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Price (Rp)</label>
+                        <input type="number" id="edit-price" step="500" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Category</label>
@@ -291,11 +291,21 @@
     </footer>
 
     <script>
+        // Helper to format currency
+        function formatIDR(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
         // --- 1. DATA STATE ---
         const initialMenu = [
-            { id: 1, name: "The Classic Cheeseburger", price: 6, category: "classic", desc: "Melted cheddar, fresh lettuce, tomato, and house sauce.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80" },
-            { id: 6, name: "The Signature Stack", price: 5, category: "signature", desc: "Our most popular choice. Perfectly balanced flavors.", image: "https://images.unsplash.com/photo-1606754752377-2147d6e19352?auto=format&fit=crop&w=800&q=80" },
-            { id: 10, name: "The Crown Burger 👑", price: 12, category: "signature", desc: "The King of burgers. Wagyu beef, truffle mayo, brioche bun.", image: "https://images.unsplash.com/photo-1520072959219-c595dc870360?auto=format&fit=crop&w=800&q=80" }
+            { id: 1, name: "The Classic Cheeseburger", price: 85000, category: "classic", desc: "Melted cheddar, fresh lettuce, tomato, and house sauce.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80" },
+            { id: 6, name: "The Signature Stack", price: 95000, category: "signature", desc: "Our most popular choice. Perfectly balanced flavors.", image: "https://images.unsplash.com/photo-1606754752377-2147d6e19352?auto=format&fit=crop&w=800&q=80" },
+            { id: 10, name: "The Crown Burger 👑", price: 155000, category: "signature", desc: "The King of burgers. Wagyu beef, truffle mayo, brioche bun.", image: "https://images.unsplash.com/photo-1520072959219-c595dc870360?auto=format&fit=crop&w=800&q=80" }
         ];
 
         let menuData = JSON.parse(localStorage.getItem('pierre_porte_v2_menu')) || initialMenu;
@@ -323,7 +333,7 @@
                             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all group flex flex-col h-full">
                                 <div class="h-64 overflow-hidden relative">
                                     <img src="${item.image}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500'">
-                                    <div class="absolute top-4 right-4 bg-brand-red text-white font-bold px-4 py-1 rounded-full shadow-lg">$${item.price}</div>
+                                    <div class="absolute top-4 right-4 bg-brand-red text-white font-bold px-4 py-1 rounded-full shadow-lg">${formatIDR(item.price)}</div>
                                 </div>
                                 <div class="p-8 flex flex-col flex-grow">
                                     <h4 class="text-2xl font-bold text-gray-900 mb-3">${item.name}</h4>
@@ -376,7 +386,7 @@
                     <td class="px-6 py-6">
                         <span class="px-3 py-1 bg-gray-100 rounded-lg text-xs font-bold uppercase tracking-widest text-gray-500">${item.category}</span>
                     </td>
-                    <td class="px-6 py-6 font-bold text-brand-red">$${item.price}</td>
+                    <td class="px-6 py-6 font-bold text-brand-red">${formatIDR(item.price)}</td>
                     <td class="px-6 py-6 text-right space-x-2">
                         <button onclick="openEditModal(${item.id})" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"><i data-lucide="edit-3" class="w-5 h-5"></i></button>
                         <button onclick="deleteBurger(${item.id})" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
