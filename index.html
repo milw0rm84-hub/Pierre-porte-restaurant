@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pierre Porte Restaurant | Jimbaran's Finest Burgers</title>
+    <meta name="description" content="Authentic burgers in Jimbaran, Indonesia. Order via WhatsApp.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-gold': '#D4AF37',
+                        'brand-dark': '#1a1a1a',
+                        'brand-red': '#A33333',
+                        'brand-bg': '#fdfbf7',
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Lato', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #A33333;
+            border-radius: 4px;
+        }
+        .hero-pattern {
+            background-color: #1a1a1a;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+    </style>
+</head>
+<body class="bg-brand-bg text-gray-800 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-sm shadow-md transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 cursor-pointer" onclick="switchView('home')">
+                    <h1 class="font-serif text-2xl font-bold text-brand-red flex items-center gap-2">
+                        <i data-lucide="utensils-crossed" class="w-6 h-6"></i>
+                        Pierre Porte
+                    </h1>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="switchView('home', 'home-hero')" class="text-gray-700 hover:text-brand-red font-medium transition">Home</button>
+                    <button onclick="switchView('home', 'menu')" class="text-gray-700 hover:text-brand-red font-medium transition">Menu</button>
+                    <button onclick="switchView('home', 'about')" class="text-gray-700 hover:text-brand-red font-medium transition">About</button>
+                    <button onclick="switchView('home', 'contact')" class="px-4 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition flex items-center gap-2">
+                        <i data-lucide="phone"></i> WhatsApp
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button onclick="toggleMobileMenu()" class="text-gray-700 hover:text-brand-red focus:outline-none">
+                        <i data-lucide="menu" class="w-8 h-8"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button onclick="mobileNav('home-hero')" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-red">Home</button>
+                <button onclick="mobileNav('menu')" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-red">Menu</button>
+                <button onclick="mobileNav('about')" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-red">About</button>
+                <button onclick="mobileNav('contact')" class="block w-full text-left px-3 py-2 text-base font-medium text-green-600 font-bold hover:bg-gray-50">Order via WhatsApp</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT VIEW -->
+    <main id="view-home" class="flex-grow pt-20">
+        
+        <!-- Hero Section -->
+        <section id="home-hero" class="hero-pattern h-[80vh] flex items-center justify-center text-center text-white px-4">
+            <div class="max-w-4xl animate-fade-in-up">
+                <span class="text-brand-gold font-serif text-xl italic tracking-wider mb-4 block">Welcome to Jimbaran</span>
+                <h2 class="text-5xl md:text-7xl font-serif font-bold mb-6 leading-tight">Pierre Porte <br> Restaurant 🍔</h2>
+                <p class="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
+                    Premium burgers, authentic vibes, and unforgettable flavors in the heart of Indonesia.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <button onclick="scrollToSection('menu')" class="px-8 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition transform hover:-translate-y-1 shadow-lg">
+                        View Menu 📋
+                    </button>
+                    <a href="https://wa.me/6281139628202?text=Hello%20Pierre%20Porte,%20I%20would%20like%20to%20place%20an%20order." target="_blank" class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition transform hover:-translate-y-1 shadow-lg flex items-center justify-center gap-2">
+                        <i data-lucide="message-circle"></i> Order Now
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="relative h-96 rounded-2xl overflow-hidden shadow-2xl group">
+                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
+                             alt="Restaurant Interior" 
+                             class="object-cover w-full h-full transform transition duration-500 group-hover:scale-110">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    </div>
+                    <div>
+                        <h3 class="text-brand-red font-bold tracking-widest uppercase mb-2">Our Story</h3>
+                        <h2 class="text-4xl font-serif font-bold text-gray-900 mb-6">Culinary Excellence in Kuta Selatan 🇮🇩</h2>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Located at <strong>JL Teges Gede No 21, Mumbul, Jimbaran</strong>, Pierre Porte Restaurant is a culinary gem blending western grilling mastery with local Indonesian hospitality.
+                        </p>
+                        <p class="text-gray-600 mb-8 leading-relaxed">
+                            We believe a burger isn't just a meal; it's an experience. From our "Old School Beef" to the luxurious "Master Grill," every patty is crafted with passion.
+                        </p>
+                        <ul class="space-y-3 mb-8">
+                            <li class="flex items-center gap-3 text-gray-700">
+                                <i data-lucide="check-circle" class="text-brand-red"></i> Fresh Ingredients Daily
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-700">
+                                <i data-lucide="check-circle" class="text-brand-red"></i> Halal Certified Meat
+                            </li>
+                            <li class="flex items-center gap-3 text-gray-700">
+                                <i data-lucide="check-circle" class="text-brand-red"></i> Family Friendly Atmosphere
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Section -->
+        <section id="menu" class="py-20 bg-orange-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-4">Our Menu 🍔</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">Handcrafted perfection in every bite. Choose from our timeless classics or our chef's signature creations.</p>
+                </div>
+
+                <!-- Category 1 -->
+                <div class="mb-16">
+                    <h3 class="text-2xl font-bold text-brand-red mb-8 border-b-2 border-brand-red/20 pb-2 inline-block">Classic / Crowd-Pleasers</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        
+                        <!-- Item -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Cheeseburger" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                                <span class="absolute top-4 right-4 bg-brand-gold text-white font-bold px-3 py-1 rounded-full shadow">$6</span>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Classic Cheeseburger</h4>
+                                <p class="text-gray-600 text-sm">Melted cheddar, fresh lettuce, tomato, and house sauce.</p>
+                            </div>
+                        </div>
+
+                        <!-- Item -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="All American" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                                <span class="absolute top-4 right-4 bg-brand-gold text-white font-bold px-3 py-1 rounded-full shadow">$10</span>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">All-American Burger</h4>
+                                <p class="text-gray-600 text-sm">Double beef, pickles, onions, mustard, and ketchup.</p>
+                            </div>
+                        </div>
+
+                        <!-- Item -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="House Special" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                                <span class="absolute top-4 right-4 bg-brand-gold text-white font-bold px-3 py-1 rounded-full shadow">$6</span>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">The House Special</h4>
+                                <p class="text-gray-600 text-sm">Our secret recipe patty with caramelized onions.</p>
+                            </div>
+                        </div>
+
+                        <!-- Item -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1547584370-2cc98b8b8dc8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Old School" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                                <span class="absolute top-4 right-4 bg-brand-gold text-white font-bold px-3 py-1 rounded-full shadow">$8</span>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">Old School Beef Burger</h4>
+                                <p class="text-gray-600 text-sm">Simple, rustic, charcoal-grilled beef perfection.</p>
+                            </div>
+                        </div>
+
+                        <!-- Item -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1534790566855-4cb788d389ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Double Stack" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                                <span class="absolute top-4 right-4 bg-brand-gold text-white font-bold px-3 py-1 rounded-full shadow">$12</span>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Double Stack</h4>
+                                <p class="text-gray-600 text-sm">Two massive patties for the ultimate hunger.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category 2 -->
+                <div class="mb-8">
+                    <h3 class="text-2xl font-bold text-brand-red mb-8 border-b-2 border-brand-red/20 pb-2 inline-block">Signature / House Burgers ⭐</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        
+                        <!-- Item -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group border-t-4 border-brand-red">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1606754752377-2147d6e19352?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Signature" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                                <span class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full shadow">$5</span>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Signature Stack</h4>
+                                <p class="text-gray-600 text-sm">Our most popular choice. Perfectly balanced flavors.</p>
+                            </div>
+                        </div>
+
+                        <!-- Item -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group border-t-4 border-brand-red">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Prime" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                                <span class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full shadow">$4</span>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Prime Patty</h4>
+                                <p class="text-gray-600 text-sm">Premium cut beef, simple seasoning.</p>
+                            </div>
+                        </div>
+
+                        <!-- Item -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group border-t-4 border-brand-red">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1596662951482-0c4ba74a6df6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Master Grill" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                                <span class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full shadow">$6</span>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Master Grill</h4>
+                                <p class="text-gray-600 text-sm">Smokey BBQ sauce, onion rings, and bacon.</p>
+                            </div>
+                        </div>
+
+                        <!-- Item -->
+                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group border-t-4 border-brand-red">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Chefs Choice" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                                <span class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full shadow">$9</span>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Chef’s Choice Burger</h4>
+                                <p class="text-gray-600 text-sm">A rotating recipe decided daily by our head chef.</p>
+                            </div>
+                        </div>
+
+                         <!-- Item -->
+                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group border-t-4 border-brand-red">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="https://images.unsplash.com/photo-1520072959219-c595dc870360?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Crown" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                                <span class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full shadow">$12</span>
+                            </div>
+                            <div class="p-6">
+                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Crown Burger 👑</h4>
+                                <p class="text-gray-600 text-sm">The King of burgers. Wagyu beef, truffle mayo, brioche bun.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WhatsApp Ordering Section -->
+        <section id="contact" class="py-20 bg-brand-dark text-white relative overflow-hidden">
+            <!-- Background Decoration -->
+            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-green-500 rounded-full opacity-10 blur-3xl"></div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="text-4xl font-serif font-bold mb-6">Ready to Order? 📱</h2>
+                        <p class="text-gray-300 text-lg mb-8">
+                            We've made it simple. Scan the QR code or click the button to start your order via WhatsApp. 
+                            <br><br>
+                            <strong>Opening Hours:</strong><br>
+                            Daily: 11:00 AM - 10:00 PM
+                        </p>
+                        
+                        <a href="https://wa.me/6281139628202?text=Hello%20Pierre%20Porte,%20I%20would%20like%20to%20place%20an%20order." target="_blank" class="inline-flex items-center gap-3 px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-full transition shadow-lg w-full md:w-auto justify-center">
+                            <i data-lucide="message-circle" class="w-6 h-6"></i>
+                            +62 811 3962 8202
+                        </a>
+                        
+                        <div class="mt-8 flex items-start gap-4">
+                            <i data-lucide="map-pin" class="text-brand-red w-6 h-6 flex-shrink-0 mt-1"></i>
+                            <p class="text-gray-300">
+                                Pierre Porte Restaurant<br>
+                                JL teges gede no 21 mumbul jimbaran kuta selatan<br>
+                                Indonesia
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col items-center justify-center bg-white p-8 rounded-2xl shadow-2xl max-w-sm mx-auto">
+                        <h3 class="text-gray-800 font-bold mb-4 text-center">Scan to Order</h3>
+                        <!-- Generated QR Code linking to the WhatsApp number -->
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://wa.me/6281139628202" alt="WhatsApp QR Code" class="w-48 h-48 border-4 border-gray-100 rounded-lg mb-4">
+                        <p class="text-gray-500 text-sm text-center">Open your camera app to start chatting!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- LEGAL VIEWS (Hidden by default) -->
+    <section id="view-privacy" class="hidden flex-grow pt-28 pb-20 px-4">
+        <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-sm border border-gray-100">
+            <h1 class="text-4xl font-serif font-bold text-gray-900 mb-6">Privacy Policy</h1>
+            <p class="text-sm text-gray-500 mb-8">Last Updated: <span class="current-year"></span></p>
+            
+            <div class="space-y-6 text-gray-700">
+                <p>At <strong>Pierre Porte Restaurant</strong>, accessible from our premises in Jimbaran, one of our main priorities is the privacy of our visitors.</p>
+                
+                <h3 class="text-xl font-bold text-gray-900">Information We Collect</h3>
+                <p>When you contact us via WhatsApp to place an order, we may collect personal information such as your name, phone number, and delivery address. This information is used solely for the purpose of fulfilling your order.</p>
+                
+                <h3 class="text-xl font-bold text-gray-900">How We Use Your Information</h3>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li>Process your food orders.</li>
+                    <li>Communicate with you regarding order status.</li>
+                    <li>Find and prevent fraud.</li>
+                </ul>
+
+                <h3 class="text-xl font-bold text-gray-900">Log Files</h3>
+                <p>Pierre Porte Restaurant follows a standard procedure of using log files. These files log visitors when they visit websites. The information collected by log files includes internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp.</p>
+            </div>
+            <button onclick="switchView('home')" class="mt-8 text-brand-red font-bold hover:underline">← Back to Home</button>
+        </div>
+    </section>
+
+    <section id="view-terms" class="hidden flex-grow pt-28 pb-20 px-4">
+        <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-sm border border-gray-100">
+            <h1 class="text-4xl font-serif font-bold text-gray-900 mb-6">Terms and Conditions</h1>
+            <p class="text-sm text-gray-500 mb-8">Last Updated: <span class="current-year"></span></p>
+            
+            <div class="space-y-6 text-gray-700">
+                <h3 class="text-xl font-bold text-gray-900">1. Introduction</h3>
+                <p>These terms and conditions outline the rules and regulations for the use of Pierre Porte Restaurant's Website.</p>
+                
+                <h3 class="text-xl font-bold text-gray-900">2. Orders & Payments</h3>
+                <p>By placing an order via WhatsApp, you agree to pay the prices listed on our menu. Prices are subject to change without prior notice. Payment methods will be confirmed via chat.</p>
+                
+                <h3 class="text-xl font-bold text-gray-900">3. Allergens</h3>
+                <p>Please inform our staff via WhatsApp if you have any food allergies. While we take precautions, our kitchen handles nuts, gluten, and dairy.</p>
+                
+                <h3 class="text-xl font-bold text-gray-900">4. Limitation of Liability</h3>
+                <p>Pierre Porte Restaurant shall not be held responsible for any direct, indirect, or consequential damages arising out of the use of our website or services.</p>
+            </div>
+            <button onclick="switchView('home')" class="mt-8 text-brand-red font-bold hover:underline">← Back to Home</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t border-gray-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="text-center md:text-left">
+                    <h3 class="font-serif font-bold text-xl text-brand-dark">Pierre Porte Restaurant</h3>
+                    <p class="text-gray-500 text-sm mt-2">Authentic Flavors. Good Times. 🍟</p>
+                </div>
+                
+                <div class="flex flex-wrap justify-center gap-6 text-sm font-medium text-gray-600">
+                    <button onclick="switchView('home')" class="hover:text-brand-red">Home</button>
+                    <button onclick="switchView('privacy')" class="hover:text-brand-red">Privacy Policy</button>
+                    <button onclick="switchView('terms')" class="hover:text-brand-red">Terms & Conditions</button>
+                </div>
+
+                <div class="text-gray-400 text-sm">
+                    &copy; <span class="current-year"></span> Pierre Porte. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Update Year
+        const years = document.querySelectorAll('.current-year');
+        years.forEach(el => el.textContent = new Date().getFullYear());
+
+        // Mobile Menu Logic
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Navigation Logic
+        function mobileNav(sectionId) {
+            toggleMobileMenu();
+            switchView('home', sectionId);
+        }
+
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                const headerOffset = 80;
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            }
+        }
+
+        function switchView(viewName, sectionScroll = null) {
+            // Views
+            const views = ['view-home', 'view-privacy', 'view-terms'];
+            
+            // Hide all views
+            views.forEach(v => {
+                document.getElementById(v).classList.add('hidden');
+            });
+
+            // Show selected view
+            const selectedView = document.getElementById('view-' + viewName);
+            selectedView.classList.remove('hidden');
+
+            // Handle Scroll
+            if (sectionScroll && viewName === 'home') {
+                // Allow a tiny delay for the DOM to reveal the element before scrolling
+                setTimeout(() => {
+                    scrollToSection(sectionScroll);
+                }, 10);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
