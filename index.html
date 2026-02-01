@@ -54,7 +54,7 @@
         .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
         
         /* Modal Animation */
-        #edit-modal:not(.hidden) .modal-content {
+        #edit-modal:not(.hidden) .modal-content, #category-modal:not(.hidden) .modal-content {
             animation: zoom-in 0.3s ease-out forwards;
         }
         @keyframes zoom-in {
@@ -194,6 +194,9 @@
                     <p class="text-gray-500">Manage your menu categories, items, and pricing.</p>
                 </div>
                 <div class="flex gap-4">
+                    <button onclick="openCategoryManagement()" class="px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-100 flex items-center gap-2 shadow-sm transition">
+                        <i data-lucide="layers" class="w-5 h-5"></i> Manage Categories
+                    </button>
                     <button onclick="openEditModal()" class="px-6 py-3 bg-brand-red text-white rounded-xl font-bold hover:bg-red-700 flex items-center gap-2 shadow-md transition">
                         <i data-lucide="plus-circle" class="w-5 h-5"></i> Add New Burger
                     </button>
@@ -222,7 +225,7 @@
         </div>
     </section>
 
-    <!-- EDIT MODAL -->
+    <!-- EDIT ITEM MODAL -->
     <div id="edit-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
         <div class="modal-content bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
             <div class="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
@@ -246,9 +249,7 @@
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Category</label>
                         <select id="edit-category" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none bg-white font-medium text-gray-700">
-                            <option value="classic">CLASSIC BURGERS</option>
-                            <option value="signature">SIGNATURE SPECIALS</option>
-                            <option value="sides">SIDES & DRINKS</option>
+                            <!-- Populated dynamically -->
                         </select>
                     </div>
                     <div>
@@ -270,6 +271,34 @@
             <div class="px-8 py-6 bg-gray-50 border-t border-gray-100 flex justify-end gap-4">
                 <button onclick="closeEditModal()" class="px-6 py-3 text-gray-500 font-bold hover:bg-gray-200 rounded-xl transition">Cancel</button>
                 <button onclick="saveItemData()" class="px-8 py-3 bg-brand-red text-white font-bold rounded-xl shadow-lg hover:bg-red-700 transition">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CATEGORY MANAGEMENT MODAL -->
+    <div id="category-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+        <div class="modal-content bg-white w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden">
+            <div class="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="layers" class="text-brand-gold w-6 h-6"></i>
+                    <h3 class="text-2xl font-bold text-gray-900">Manage Categories</h3>
+                </div>
+                <button onclick="closeCategoryModal()" class="text-gray-400 hover:text-gray-600 transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="p-8">
+                <div class="flex gap-2 mb-6">
+                    <input type="text" id="new-category-name" placeholder="New Category Name..." class="flex-grow px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none">
+                    <button onclick="addCategory()" class="px-6 py-3 bg-brand-dark text-white font-bold rounded-xl hover:bg-brand-red transition">Add</button>
+                </div>
+                
+                <div class="max-h-[300px] overflow-y-auto space-y-2" id="category-list">
+                    <!-- Categories listed here -->
+                </div>
+            </div>
+            <div class="px-8 py-6 bg-gray-50 border-t border-gray-100 text-right">
+                <button onclick="closeCategoryModal()" class="px-8 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition">Done</button>
             </div>
         </div>
     </div>
@@ -310,7 +339,14 @@
             { id: 10, name: "The Crown Burger 👑", price: 155000, category: "signature", desc: "The King of burgers. Wagyu beef, truffle mayo, brioche bun.", image: "https://images.unsplash.com/photo-1520072959219-c595dc870360?auto=format&fit=crop&w=800&q=80" }
         ];
 
+        const initialCategories = [
+            { id: "classic", name: "Classic Selection" },
+            { id: "signature", name: "Signature Specials" },
+            { id: "sides", name: "Sides & Drinks" }
+        ];
+
         let menuData = JSON.parse(localStorage.getItem('pierre_porte_v3_menu')) || initialMenu;
+        let categories = JSON.parse(localStorage.getItem('pierre_porte_v3_categories')) || initialCategories;
 
         // --- 2. CORE FUNCTIONS ---
 
@@ -318,25 +354,16 @@
             const container = document.getElementById('menu-container');
             container.innerHTML = '';
 
-            // Get unique categories and preserve order based on select options
-            const categoryOrder = ['classic', 'signature', 'sides'];
-            const activeCategories = [...new Set(menuData.map(i => i.category))].sort((a, b) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b));
-
-            activeCategories.forEach(cat => {
-                const items = menuData.filter(i => i.category === cat);
+            // Filter out empty categories
+            categories.forEach(cat => {
+                const items = menuData.filter(i => i.category === cat.id);
                 if (items.length === 0) return;
-
-                const categoryLabels = {
-                    'classic': 'Classic Selection',
-                    'signature': 'Signature Specials',
-                    'sides': 'Sides & Drinks'
-                };
 
                 const section = document.createElement('div');
                 section.className = "mb-20 animate-fade-in-up";
                 section.innerHTML = `
                     <div class="flex items-center gap-4 mb-10">
-                        <h3 class="text-3xl font-serif font-bold text-gray-900 capitalize">${categoryLabels[cat] || cat}</h3>
+                        <h3 class="text-3xl font-serif font-bold text-gray-900 capitalize">${cat.name}</h3>
                         <div class="flex-grow h-px bg-gray-100"></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -385,6 +412,7 @@
             tbody.innerHTML = '';
 
             menuData.forEach(item => {
+                const catName = categories.find(c => c.id === item.category)?.name || item.category;
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-gray-50 transition border-b border-gray-50";
                 tr.innerHTML = `
@@ -396,7 +424,7 @@
                     </td>
                     <td class="px-6 py-6">
                         <span class="px-4 py-1.5 bg-brand-gold/10 text-brand-gold rounded-lg text-xs font-black uppercase tracking-widest">
-                            ${item.category}
+                            ${catName}
                         </span>
                     </td>
                     <td class="px-6 py-6 font-bold text-brand-red">${formatIDR(item.price)}</td>
@@ -410,17 +438,23 @@
             lucide.createIcons();
         }
 
+        // --- 4. ITEM MANAGEMENT ---
+
         function openEditModal(id = null) {
             const modal = document.getElementById('edit-modal');
             const title = document.getElementById('modal-title');
+            const catSelect = document.getElementById('edit-category');
             
+            // Populate category dropdown
+            catSelect.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+
             // Clear inputs
             document.getElementById('edit-id').value = '';
             document.getElementById('edit-name').value = '';
             document.getElementById('edit-price').value = '';
             document.getElementById('edit-desc').value = '';
             document.getElementById('edit-image').value = '';
-            document.getElementById('edit-category').value = 'classic';
+            document.getElementById('edit-category').value = categories[0]?.id || '';
 
             if (id) {
                 const item = menuData.find(i => i.id === id);
@@ -465,23 +499,109 @@
                 menuData.push({ id: newId, name, price, desc, image, category });
             }
 
-            localStorage.setItem('pierre_porte_v3_menu', JSON.stringify(menuData));
-            renderAdminTable();
-            renderSiteMenu();
+            saveAndRefresh();
             closeEditModal();
         }
 
         function deleteBurger(id) {
             if (confirm("Remove this item from the menu permanently?")) {
                 menuData = menuData.filter(i => i.id !== id);
-                localStorage.setItem('pierre_porte_v3_menu', JSON.stringify(menuData));
-                renderAdminTable();
-                renderSiteMenu();
+                saveAndRefresh();
             }
         }
 
-        // --- 4. NAVIGATION ---
+        // --- 5. CATEGORY MANAGEMENT ---
 
+        function openCategoryManagement() {
+            const modal = document.getElementById('category-modal');
+            renderCategoryList();
+            modal.classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('category-modal').classList.add('hidden');
+        }
+
+        function renderCategoryList() {
+            const list = document.getElementById('category-list');
+            list.innerHTML = '';
+            
+            categories.forEach(cat => {
+                const div = document.createElement('div');
+                div.className = "flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-brand-gold/30 transition";
+                div.innerHTML = `
+                    <div class="flex flex-col">
+                        <span class="font-bold text-gray-900">${cat.name}</span>
+                        <span class="text-xs text-gray-400 uppercase font-bold tracking-tighter">${cat.id}</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="editCategoryPrompt('${cat.id}')" class="p-2 text-blue-500 hover:bg-blue-100 rounded-lg transition"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
+                        <button onclick="removeCategory('${cat.id}')" class="p-2 text-red-500 hover:bg-red-100 rounded-lg transition"><i data-lucide="trash" class="w-4 h-4"></i></button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        function addCategory() {
+            const nameInput = document.getElementById('new-category-name');
+            const name = nameInput.value.trim();
+            if (!name) return;
+            
+            const id = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+            
+            if (categories.find(c => c.id === id)) {
+                alert("A category with a similar name already exists.");
+                return;
+            }
+
+            categories.push({ id, name });
+            nameInput.value = '';
+            saveAndRefreshCategories();
+            renderCategoryList();
+        }
+
+        function editCategoryPrompt(id) {
+            const cat = categories.find(c => c.id === id);
+            const newName = prompt("Enter new name for category:", cat.name);
+            if (newName && newName.trim()) {
+                cat.name = newName.trim();
+                saveAndRefreshCategories();
+                renderCategoryList();
+            }
+        }
+
+        function removeCategory(id) {
+            // Check if category is used
+            const count = menuData.filter(i => i.category === id).length;
+            if (count > 0) {
+                alert(`Cannot delete. This category has ${count} items assigned to it. Move them first.`);
+                return;
+            }
+            
+            if (confirm("Delete this category?")) {
+                categories = categories.filter(c => c.id !== id);
+                saveAndRefreshCategories();
+                renderCategoryList();
+            }
+        }
+
+        // --- GLOBAL REFRESH ---
+        function saveAndRefresh() {
+            localStorage.setItem('pierre_porte_v3_menu', JSON.stringify(menuData));
+            renderAdminTable();
+            renderSiteMenu();
+        }
+
+        function saveAndRefreshCategories() {
+            localStorage.setItem('pierre_porte_v3_categories', JSON.stringify(categories));
+            renderAdminTable(); // categories names might have changed
+            renderSiteMenu();
+        }
+
+        // --- NAVIGATION ---
         function toggleMobileMenu() {
             document.getElementById('mobile-menu').classList.toggle('hidden');
         }
