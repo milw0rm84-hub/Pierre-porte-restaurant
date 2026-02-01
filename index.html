@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pierre Porte Restaurant | Jimbaran's Finest Burgers</title>
+    <title>Pierre Porte Restaurant | Admin Controlled Menu</title>
     <meta name="description" content="Authentic burgers in Jimbaran, Indonesia. Order via WhatsApp.">
     
     <!-- Tailwind CSS -->
@@ -35,17 +35,10 @@
     </script>
 
     <style>
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #A33333;
-            border-radius: 4px;
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #A33333; border-radius: 4px; }
+        
         .hero-pattern {
             background-color: #1a1a1a;
             background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
@@ -53,15 +46,29 @@
             background-position: center;
             background-attachment: fixed;
         }
+
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
+        
+        /* Modal Animation */
+        #edit-modal:not(.hidden) .modal-content {
+            animation: zoom-in 0.3s ease-out forwards;
+        }
+        @keyframes zoom-in {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
     </style>
 </head>
 <body class="bg-brand-bg text-gray-800 font-sans antialiased flex flex-col min-h-screen">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-sm shadow-md transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <!-- Logo -->
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-sm shadow-md h-20 flex items-center" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="flex justify-between items-center">
                 <div class="flex-shrink-0 cursor-pointer" onclick="switchView('home')">
                     <h1 class="font-serif text-2xl font-bold text-brand-red flex items-center gap-2">
                         <i data-lucide="utensils-crossed" class="w-6 h-6"></i>
@@ -69,407 +76,423 @@
                     </h1>
                 </div>
 
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex space-x-8">
+                <div class="hidden md:flex space-x-8 items-center">
                     <button onclick="switchView('home', 'home-hero')" class="text-gray-700 hover:text-brand-red font-medium transition">Home</button>
                     <button onclick="switchView('home', 'menu')" class="text-gray-700 hover:text-brand-red font-medium transition">Menu</button>
                     <button onclick="switchView('home', 'about')" class="text-gray-700 hover:text-brand-red font-medium transition">About</button>
-                    <button onclick="switchView('home', 'contact')" class="px-4 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition flex items-center gap-2">
-                        <i data-lucide="phone"></i> WhatsApp
+                    <button onclick="switchView('home', 'contact')" class="ml-4 px-5 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition flex items-center gap-2 shadow-sm font-bold">
+                        <i data-lucide="phone" class="w-4 h-4"></i> WhatsApp Order
                     </button>
                 </div>
 
-                <!-- Mobile Menu Button -->
                 <div class="md:hidden flex items-center">
-                    <button onclick="toggleMobileMenu()" class="text-gray-700 hover:text-brand-red focus:outline-none">
+                    <button onclick="toggleMobileMenu()" class="text-gray-700 hover:text-brand-red">
                         <i data-lucide="menu" class="w-8 h-8"></i>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <button onclick="mobileNav('home-hero')" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-red">Home</button>
-                <button onclick="mobileNav('menu')" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-red">Menu</button>
-                <button onclick="mobileNav('about')" class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-brand-red">About</button>
-                <button onclick="mobileNav('contact')" class="block w-full text-left px-3 py-2 text-base font-medium text-green-600 font-bold hover:bg-gray-50">Order via WhatsApp</button>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden absolute top-20 left-0 w-full bg-white border-b shadow-lg md:hidden">
+            <div class="px-4 py-6 space-y-4">
+                <button onclick="mobileNav('home-hero')" class="block w-full text-left text-lg font-medium text-gray-700">Home</button>
+                <button onclick="mobileNav('menu')" class="block w-full text-left text-lg font-medium text-gray-700">Menu</button>
+                <button onclick="mobileNav('about')" class="block w-full text-left text-lg font-medium text-gray-700">About</button>
+                <button onclick="mobileNav('contact')" class="block w-full text-center py-3 bg-green-600 text-white rounded-lg font-bold">Order Now</button>
             </div>
         </div>
     </nav>
 
-    <!-- MAIN CONTENT VIEW -->
+    <!-- VIEWS -->
     <main id="view-home" class="flex-grow pt-20">
-        
-        <!-- Hero Section -->
-        <section id="home-hero" class="hero-pattern h-[80vh] flex items-center justify-center text-center text-white px-4">
+        <!-- Hero -->
+        <section id="home-hero" class="hero-pattern h-[85vh] flex items-center justify-center text-center text-white px-4">
             <div class="max-w-4xl animate-fade-in-up">
-                <span class="text-brand-gold font-serif text-xl italic tracking-wider mb-4 block">Welcome to</span>
-                <h2 class="text-5xl md:text-7xl font-serif font-bold mb-6 leading-tight">Pierre Porte <br> Restaurant 🍔</h2>
-                <p class="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
-                    Premium burgers, authentic vibes, and unforgettable flavors in the heart of Indonesia.
-                </p>
+                <span class="text-brand-gold font-serif text-xl italic tracking-wider mb-4 block">Welcome to Jimbaran</span>
+                <h2 class="text-5xl md:text-7xl font-serif font-bold mb-6 leading-tight">Pierre Porte <br> Restaurant</h2>
+                <p class="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">Premium burgers, authentic vibes, and unforgettable flavors in the heart of Indonesia.</p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button onclick="scrollToSection('menu')" class="px-8 py-3 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition transform hover:-translate-y-1 shadow-lg">
-                        View Menu 📋
-                    </button>
-                    <a href="https://wa.me/6281139628202?text=Hello%20Pierre%20Porte,%20I%20would%20like%20to%20place%20an%20order." target="_blank" class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition transform hover:-translate-y-1 shadow-lg flex items-center justify-center gap-2">
-                        <i data-lucide="message-circle"></i> Order Now
+                    <button onclick="scrollToSection('menu')" class="px-8 py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition transform hover:-translate-y-1 shadow-lg">View Menu</button>
+                    <a href="https://wa.me/6281139628202" target="_blank" class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition transform hover:-translate-y-1 shadow-lg flex items-center justify-center gap-2">
+                        <i data-lucide="message-circle"></i> WhatsApp Order
                     </a>
                 </div>
             </div>
         </section>
 
-        <!-- About Section -->
-        <section id="about" class="py-20 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <div class="relative h-96 rounded-2xl overflow-hidden shadow-2xl group">
-                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
-                             alt="Restaurant Interior" 
-                             class="object-cover w-full h-full transform transition duration-500 group-hover:scale-110">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    </div>
-                    <div>
-                        <h3 class="text-brand-red font-bold tracking-widest uppercase mb-2">Our Story</h3>
-                        <h2 class="text-4xl font-serif font-bold text-gray-900 mb-6">Culinary Excellence in Kuta Selatan 🇮🇩</h2>
-                        <p class="text-gray-600 mb-6 leading-relaxed">
-                            Located at <strong>JL Teges Gede No 21, Mumbul, Jimbaran</strong>, Pierre Porte Restaurant is a culinary gem blending western grilling mastery with local Indonesian hospitality.
-                        </p>
-                        <p class="text-gray-600 mb-8 leading-relaxed">
-                            We believe a burger isn't just a meal; it's an experience. From our "Old School Beef" to the luxurious "Master Grill," every patty is crafted with passion.
-                        </p>
-                        <ul class="space-y-3 mb-8">
-                            <li class="flex items-center gap-3 text-gray-700">
-                                <i data-lucide="check-circle" class="text-brand-red"></i> Fresh Ingredients Daily
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-700">
-                                <i data-lucide="check-circle" class="text-brand-red"></i> Halal Certified Meat
-                            </li>
-                            <li class="flex items-center gap-3 text-gray-700">
-                                <i data-lucide="check-circle" class="text-brand-red"></i> Family Friendly Atmosphere
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Menu Section -->
-        <section id="menu" class="py-20 bg-orange-50">
+        <!-- Menu -->
+        <section id="menu" class="py-24 bg-white">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-4">Our Menu 🍔</h2>
-                    <p class="text-gray-600 max-w-2xl mx-auto">Handcrafted perfection in every bite. Choose from our timeless classics or our chef's signature creations.</p>
+                    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-4">Our Menu</h2>
+                    <div class="w-20 h-1 bg-brand-gold mx-auto mb-6"></div>
                 </div>
+                <div id="menu-container"></div>
+            </div>
+        </section>
 
-                <!-- Category 1 -->
-                <div class="mb-16">
-                    <h3 class="text-2xl font-bold text-brand-red mb-8 border-b-2 border-brand-red/20 pb-2 inline-block">Classic / Crowd-Pleasers</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        
-                        <!-- Item -->
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group">
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Cheeseburger" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
-                                <span class="absolute top-4 right-4 bg-brand-gold text-white font-bold px-3 py-1 rounded-full shadow">$6</span>
-                            </div>
-                            <div class="p-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Classic Cheeseburger</h4>
-                                <p class="text-gray-600 text-sm">Melted cheddar, fresh lettuce, tomato, and house sauce.</p>
-                            </div>
-                        </div>
-
-                        <!-- Item -->
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group">
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="All American" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
-                                <span class="absolute top-4 right-4 bg-brand-gold text-white font-bold px-3 py-1 rounded-full shadow">$10</span>
-                            </div>
-                            <div class="p-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">All-American Burger</h4>
-                                <p class="text-gray-600 text-sm">Double beef, pickles, onions, mustard, and ketchup.</p>
-                            </div>
-                        </div>
-
-                        <!-- Item -->
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group">
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1551782450-a2132b4ba21d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="House Special" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
-                                <span class="absolute top-4 right-4 bg-brand-gold text-white font-bold px-3 py-1 rounded-full shadow">$6</span>
-                            </div>
-                            <div class="p-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">The House Special</h4>
-                                <p class="text-gray-600 text-sm">Our secret recipe patty with caramelized onions.</p>
-                            </div>
-                        </div>
-
-                        <!-- Item -->
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group">
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1547584370-2cc98b8b8dc8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Old School" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
-                                <span class="absolute top-4 right-4 bg-brand-gold text-white font-bold px-3 py-1 rounded-full shadow">$8</span>
-                            </div>
-                            <div class="p-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">Old School Beef Burger</h4>
-                                <p class="text-gray-600 text-sm">Simple, rustic, charcoal-grilled beef perfection.</p>
-                            </div>
-                        </div>
-
-                        <!-- Item -->
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group">
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1534790566855-4cb788d389ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Double Stack" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
-                                <span class="absolute top-4 right-4 bg-brand-gold text-white font-bold px-3 py-1 rounded-full shadow">$12</span>
-                            </div>
-                            <div class="p-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Double Stack</h4>
-                                <p class="text-gray-600 text-sm">Two massive patties for the ultimate hunger.</p>
-                            </div>
-                        </div>
+        <!-- About -->
+        <section id="about" class="py-24 bg-brand-bg border-t border-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div class="h-96 rounded-2xl overflow-hidden shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=80" class="w-full h-full object-cover">
                     </div>
-                </div>
-
-                <!-- Category 2 -->
-                <div class="mb-8">
-                    <h3 class="text-2xl font-bold text-brand-red mb-8 border-b-2 border-brand-red/20 pb-2 inline-block">Signature / House Burgers ⭐</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        
-                        <!-- Item -->
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group border-t-4 border-brand-red">
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1606754752377-2147d6e19352?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Signature" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
-                                <span class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full shadow">$5</span>
-                            </div>
-                            <div class="p-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Signature Stack</h4>
-                                <p class="text-gray-600 text-sm">Our most popular choice. Perfectly balanced flavors.</p>
-                            </div>
-                        </div>
-
-                        <!-- Item -->
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group border-t-4 border-brand-red">
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Prime" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
-                                <span class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full shadow">$4</span>
-                            </div>
-                            <div class="p-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Prime Patty</h4>
-                                <p class="text-gray-600 text-sm">Premium cut beef, simple seasoning.</p>
-                            </div>
-                        </div>
-
-                        <!-- Item -->
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group border-t-4 border-brand-red">
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1596662951482-0c4ba74a6df6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Master Grill" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
-                                <span class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full shadow">$6</span>
-                            </div>
-                            <div class="p-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Master Grill</h4>
-                                <p class="text-gray-600 text-sm">Smokey BBQ sauce, onion rings, and bacon.</p>
-                            </div>
-                        </div>
-
-                        <!-- Item -->
-                        <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group border-t-4 border-brand-red">
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Chefs Choice" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
-                                <span class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full shadow">$9</span>
-                            </div>
-                            <div class="p-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Chef’s Choice Burger</h4>
-                                <p class="text-gray-600 text-sm">A rotating recipe decided daily by our head chef.</p>
-                            </div>
-                        </div>
-
-                         <!-- Item -->
-                         <div class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition group border-t-4 border-brand-red">
-                            <div class="h-48 overflow-hidden relative">
-                                <img src="https://images.unsplash.com/photo-1520072959219-c595dc870360?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Crown" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
-                                <span class="absolute top-4 right-4 bg-brand-red text-white font-bold px-3 py-1 rounded-full shadow">$12</span>
-                            </div>
-                            <div class="p-6">
-                                <h4 class="text-xl font-bold text-gray-900 mb-2">The Crown Burger 👑</h4>
-                                <p class="text-gray-600 text-sm">The King of burgers. Wagyu beef, truffle mayo, brioche bun.</p>
-                            </div>
-                        </div>
+                    <div>
+                        <h3 class="text-brand-red font-bold uppercase mb-4 text-sm tracking-widest">Our Story</h3>
+                        <h2 class="text-4xl font-serif font-bold text-gray-900 mb-6">Culinary Excellence</h2>
+                        <p class="text-gray-600 text-lg leading-relaxed mb-6">Located at JL Teges Gede No 21, Mumbul, Jimbaran, Pierre Porte Restaurant blends western grilling mastery with local Indonesian hospitality.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- WhatsApp Ordering Section -->
-        <section id="contact" class="py-20 bg-brand-dark text-white relative overflow-hidden">
-            <!-- Background Decoration -->
-            <div class="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-green-500 rounded-full opacity-10 blur-3xl"></div>
-            
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <div>
-                        <h2 class="text-4xl font-serif font-bold mb-6">Ready to Order? 📱</h2>
-                        <p class="text-gray-300 text-lg mb-8">
-                            We've made it simple. Scan the QR code or click the button to start your order via WhatsApp. 
-                            <br><br>
-                            <strong>Opening Hours:</strong><br>
-                            Daily: 11:00 AM - 10:00 PM
-                        </p>
-                        
-                        <a href="https://wa.me/6281139628202?text=Hello%20Pierre%20Porte,%20I%20would%20like%20to%20place%20an%20order." target="_blank" class="inline-flex items-center gap-3 px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-full transition shadow-lg w-full md:w-auto justify-center">
-                            <i data-lucide="message-circle" class="w-6 h-6"></i>
-                            +62 811 3962 8202
-                        </a>
-                        
-                        <div class="mt-8 flex items-start gap-4">
-                            <i data-lucide="map-pin" class="text-brand-red w-6 h-6 flex-shrink-0 mt-1"></i>
-                            <p class="text-gray-300">
-                                Pierre Porte Restaurant<br>
-                                JL teges gede no 21 mumbul jimbaran kuta selatan<br>
-                                Indonesia
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex flex-col items-center justify-center bg-white p-8 rounded-2xl shadow-2xl max-w-sm mx-auto">
-                        <h3 class="text-gray-800 font-bold mb-4 text-center">Scan to Order</h3>
-                        <!-- Generated QR Code linking to the WhatsApp number -->
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://wa.me/6281139628202" alt="WhatsApp QR Code" class="w-48 h-48 border-4 border-gray-100 rounded-lg mb-4">
-                        <p class="text-gray-500 text-sm text-center">Open your camera app to start chatting!</p>
-                    </div>
+        <!-- WhatsApp/Contact -->
+        <section id="contact" class="py-24 bg-brand-dark text-white text-center">
+            <div class="max-w-4xl mx-auto px-4">
+                <h2 class="text-4xl font-serif font-bold mb-8">Ready to Order?</h2>
+                <div class="bg-white p-8 rounded-3xl shadow-2xl inline-block mb-8">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://wa.me/6281139628202" alt="QR" class="w-48 h-48 mx-auto">
                 </div>
+                <p class="text-gray-300 text-lg mb-8">Scan to order via WhatsApp or click below.</p>
+                <a href="https://wa.me/6281139628202" target="_blank" class="px-12 py-5 bg-green-600 hover:bg-green-700 text-white font-bold text-xl rounded-full transition-all shadow-xl inline-flex items-center gap-3">
+                    <i data-lucide="message-circle"></i> +62 811 3962 8202
+                </a>
             </div>
         </section>
     </main>
 
-    <!-- LEGAL VIEWS (Hidden by default) -->
-    <section id="view-privacy" class="hidden flex-grow pt-28 pb-20 px-4">
-        <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-sm border border-gray-100">
-            <h1 class="text-4xl font-serif font-bold text-gray-900 mb-6">Privacy Policy</h1>
-            <p class="text-sm text-gray-500 mb-8">Last Updated: <span class="current-year"></span></p>
-            
-            <div class="space-y-6 text-gray-700">
-                <p>At <strong>Pierre Porte Restaurant</strong>, accessible from our premises in Jimbaran, one of our main priorities is the privacy of our visitors.</p>
-                
-                <h3 class="text-xl font-bold text-gray-900">Information We Collect</h3>
-                <p>When you contact us via WhatsApp to place an order, we may collect personal information such as your name, phone number, and delivery address. This information is used solely for the purpose of fulfilling your order.</p>
-                
-                <h3 class="text-xl font-bold text-gray-900">How We Use Your Information</h3>
-                <ul class="list-disc pl-5 space-y-2">
-                    <li>Process your food orders.</li>
-                    <li>Communicate with you regarding order status.</li>
-                    <li>Find and prevent fraud.</li>
-                </ul>
-
-                <h3 class="text-xl font-bold text-gray-900">Log Files</h3>
-                <p>Pierre Porte Restaurant follows a standard procedure of using log files. These files log visitors when they visit websites. The information collected by log files includes internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp.</p>
+    <!-- ADMIN LOGIN -->
+    <section id="view-admin-login" class="hidden flex-grow flex items-center justify-center bg-gray-100 py-32 px-4">
+        <div class="max-w-md w-full bg-white p-10 rounded-2xl shadow-xl border border-gray-200">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-brand-gold/10 text-brand-gold rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i data-lucide="shield-check" class="w-8 h-8"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900">Admin Panel</h2>
+                <p class="text-gray-500 mt-2">Enter credentials to manage menu</p>
             </div>
-            <button onclick="switchView('home')" class="mt-8 text-brand-red font-bold hover:underline">← Back to Home</button>
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Password</label>
+                    <input type="password" id="admin-password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none transition" placeholder="••••••••">
+                    <p id="login-error" class="text-red-500 text-sm mt-2 hidden">Incorrect password.</p>
+                </div>
+                <button onclick="handleLogin()" class="w-full bg-brand-dark text-white py-4 rounded-xl font-bold hover:bg-brand-red transition shadow-lg">Login Now</button>
+                <button onclick="switchView('home')" class="w-full text-gray-400 hover:text-gray-600 font-medium">Cancel</button>
+            </div>
+            <p class="text-center text-xs text-gray-400 mt-8 uppercase tracking-widest">Default: admin</p>
         </div>
     </section>
 
-    <section id="view-terms" class="hidden flex-grow pt-28 pb-20 px-4">
-        <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 rounded-xl shadow-sm border border-gray-100">
-            <h1 class="text-4xl font-serif font-bold text-gray-900 mb-6">Terms and Conditions</h1>
-            <p class="text-sm text-gray-500 mb-8">Last Updated: <span class="current-year"></span></p>
-            
-            <div class="space-y-6 text-gray-700">
-                <h3 class="text-xl font-bold text-gray-900">1. Introduction</h3>
-                <p>These terms and conditions outline the rules and regulations for the use of Pierre Porte Restaurant's Website.</p>
-                
-                <h3 class="text-xl font-bold text-gray-900">2. Orders & Payments</h3>
-                <p>By placing an order via WhatsApp, you agree to pay the prices listed on our menu. Prices are subject to change without prior notice. Payment methods will be confirmed via chat.</p>
-                
-                <h3 class="text-xl font-bold text-gray-900">3. Allergens</h3>
-                <p>Please inform our staff via WhatsApp if you have any food allergies. While we take precautions, our kitchen handles nuts, gluten, and dairy.</p>
-                
-                <h3 class="text-xl font-bold text-gray-900">4. Limitation of Liability</h3>
-                <p>Pierre Porte Restaurant shall not be held responsible for any direct, indirect, or consequential damages arising out of the use of our website or services.</p>
+    <!-- ADMIN DASHBOARD -->
+    <section id="view-admin-dashboard" class="hidden flex-grow bg-gray-50 pt-28 pb-20 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+                <div>
+                    <h2 class="text-4xl font-serif font-bold text-gray-900">Menu Management</h2>
+                    <p class="text-gray-500">Live updates reflected on website instantly</p>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="openEditModal()" class="px-6 py-3 bg-brand-dark text-white rounded-xl font-bold hover:bg-gray-800 flex items-center gap-2 shadow-md">
+                        <i data-lucide="plus-circle" class="w-5 h-5"></i> Add Burger
+                    </button>
+                    <button onclick="logoutAdmin()" class="px-6 py-3 border border-gray-200 bg-white text-gray-600 rounded-xl font-bold hover:bg-gray-100 flex items-center gap-2">
+                        <i data-lucide="log-out" class="w-5 h-5"></i> Logout
+                    </button>
+                </div>
             </div>
-            <button onclick="switchView('home')" class="mt-8 text-brand-red font-bold hover:underline">← Back to Home</button>
+
+            <!-- Dashboard Table -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Item</th>
+                                <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Category</th>
+                                <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Price</th>
+                                <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body" class="divide-y divide-gray-50"></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
+
+    <!-- EDIT MODAL -->
+    <div id="edit-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+        <div class="modal-content bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
+            <div class="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h3 class="text-2xl font-bold text-gray-900" id="modal-title">Edit Item</h3>
+                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div class="p-8 space-y-6">
+                <input type="hidden" id="edit-id">
+                
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Burger Name</label>
+                    <input type="text" id="edit-name" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Price ($)</label>
+                        <input type="number" id="edit-price" step="0.5" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Category</label>
+                        <select id="edit-category" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none bg-white">
+                            <option value="classic">Classic</option>
+                            <option value="signature">Signature</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                    <textarea id="edit-desc" rows="3" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none resize-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2">Image URL</label>
+                    <input type="text" id="edit-image" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none text-sm text-gray-500">
+                </div>
+            </div>
+            <div class="px-8 py-6 bg-gray-50 border-t border-gray-100 flex justify-end gap-4">
+                <button onclick="closeEditModal()" class="px-6 py-3 text-gray-500 font-bold hover:bg-gray-200 rounded-xl transition">Cancel</button>
+                <button onclick="saveItemData()" class="px-8 py-3 bg-brand-red text-white font-bold rounded-xl shadow-lg hover:bg-red-700 transition">Save Burger</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
-    <footer class="bg-gray-50 border-t border-gray-200 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="text-center md:text-left">
-                    <h3 class="font-serif font-bold text-xl text-brand-dark">Pierre Porte Restaurant</h3>
-                    <p class="text-gray-500 text-sm mt-2">Authentic Flavors. Good Times. 🍟</p>
-                </div>
-                
-                <div class="flex flex-wrap justify-center gap-6 text-sm font-medium text-gray-600">
-                    <button onclick="switchView('home')" class="hover:text-brand-red">Home</button>
-                    <button onclick="switchView('privacy')" class="hover:text-brand-red">Privacy Policy</button>
-                    <button onclick="switchView('terms')" class="hover:text-brand-red">Terms & Conditions</button>
-                </div>
-
-                <div class="text-gray-400 text-sm">
-                    &copy; <span class="current-year"></span> Pierre Porte. All rights reserved.
-                </div>
+    <footer class="bg-white border-t border-gray-100 py-12 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <!-- Hidden Link on the "P" letter -->
+                <h4 class="font-serif font-bold text-xl text-brand-dark">
+                    <span class="cursor-pointer hover:text-brand-red transition" onclick="switchView('admin-login')">P</span>ierre Porte
+                </h4>
+                <p class="text-gray-400 text-sm">Jimbaran, Bali</p>
             </div>
+            <div class="flex gap-8 text-sm font-bold text-gray-600">
+                <button onclick="switchView('home')" class="hover:text-brand-red">Home</button>
+                <button onclick="scrollToSection('menu')" class="hover:text-brand-red">Menu</button>
+                <button onclick="scrollToSection('contact')" class="hover:text-brand-red">Contact</button>
+            </div>
+            <p class="text-gray-400 text-xs">&copy; <span id="year"></span> Pierre Porte Restaurant.</p>
         </div>
     </footer>
 
-    <!-- JavaScript Logic -->
     <script>
-        // Initialize Icons
-        lucide.createIcons();
+        // --- 1. DATA STATE ---
+        const initialMenu = [
+            { id: 1, name: "The Classic Cheeseburger", price: 6, category: "classic", desc: "Melted cheddar, fresh lettuce, tomato, and house sauce.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80" },
+            { id: 6, name: "The Signature Stack", price: 5, category: "signature", desc: "Our most popular choice. Perfectly balanced flavors.", image: "https://images.unsplash.com/photo-1606754752377-2147d6e19352?auto=format&fit=crop&w=800&q=80" },
+            { id: 10, name: "The Crown Burger 👑", price: 12, category: "signature", desc: "The King of burgers. Wagyu beef, truffle mayo, brioche bun.", image: "https://images.unsplash.com/photo-1520072959219-c595dc870360?auto=format&fit=crop&w=800&q=80" }
+        ];
 
-        // Update Year
-        const years = document.querySelectorAll('.current-year');
-        years.forEach(el => el.textContent = new Date().getFullYear());
+        let menuData = JSON.parse(localStorage.getItem('pierre_porte_v2_menu')) || initialMenu;
 
-        // Mobile Menu Logic
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+        // --- 2. CORE FUNCTIONS ---
+
+        function renderSiteMenu() {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = '';
+
+            const categories = ['classic', 'signature'];
+            categories.forEach(cat => {
+                const items = menuData.filter(i => i.category === cat);
+                if (items.length === 0) return;
+
+                const section = document.createElement('div');
+                section.className = "mb-20 animate-fade-in-up";
+                section.innerHTML = `
+                    <div class="flex items-center gap-4 mb-10">
+                        <h3 class="text-3xl font-serif font-bold text-gray-900 capitalize">${cat} Selection</h3>
+                        <div class="flex-grow h-px bg-gray-100"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                        ${items.map(item => `
+                            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all group flex flex-col h-full">
+                                <div class="h-64 overflow-hidden relative">
+                                    <img src="${item.image}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500'">
+                                    <div class="absolute top-4 right-4 bg-brand-red text-white font-bold px-4 py-1 rounded-full shadow-lg">$${item.price}</div>
+                                </div>
+                                <div class="p-8 flex flex-col flex-grow">
+                                    <h4 class="text-2xl font-bold text-gray-900 mb-3">${item.name}</h4>
+                                    <p class="text-gray-500 text-sm mb-8 flex-grow leading-relaxed">${item.desc}</p>
+                                    <a href="https://wa.me/6281139628202?text=I'd%20like%20to%20order%20the%20${encodeURIComponent(item.name)}" target="_blank" class="w-full py-4 bg-gray-50 rounded-2xl text-center font-bold hover:bg-brand-red hover:text-white transition-all flex items-center justify-center gap-2">
+                                        Order Now <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+            lucide.createIcons();
         }
 
-        // Navigation Logic
-        function mobileNav(sectionId) {
-            toggleMobileMenu();
-            switchView('home', sectionId);
-        }
+        // --- 3. ADMIN DASHBOARD LOGIC ---
 
-        function scrollToSection(sectionId) {
-            const element = document.getElementById(sectionId);
-            if (element) {
-                const headerOffset = 80;
-                const elementPosition = element.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth"
-                });
+        function handleLogin() {
+            const pass = document.getElementById('admin-password').value;
+            if (pass === 'admin') {
+                document.getElementById('login-error').classList.add('hidden');
+                switchView('admin-dashboard');
+                renderAdminTable();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
             }
         }
 
-        function switchView(viewName, sectionScroll = null) {
-            // Views
-            const views = ['view-home', 'view-privacy', 'view-terms'];
-            
-            // Hide all views
-            views.forEach(v => {
-                document.getElementById(v).classList.add('hidden');
+        function logoutAdmin() {
+            document.getElementById('admin-password').value = '';
+            switchView('home');
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = '';
+
+            menuData.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition border-b border-gray-50";
+                tr.innerHTML = `
+                    <td class="px-6 py-6">
+                        <div class="flex items-center gap-4">
+                            <img src="${item.image}" class="w-12 h-12 rounded-xl object-cover shadow-sm">
+                            <div class="font-bold text-gray-900">${item.name}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-6">
+                        <span class="px-3 py-1 bg-gray-100 rounded-lg text-xs font-bold uppercase tracking-widest text-gray-500">${item.category}</span>
+                    </td>
+                    <td class="px-6 py-6 font-bold text-brand-red">$${item.price}</td>
+                    <td class="px-6 py-6 text-right space-x-2">
+                        <button onclick="openEditModal(${item.id})" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"><i data-lucide="edit-3" class="w-5 h-5"></i></button>
+                        <button onclick="deleteBurger(${item.id})" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
             });
+            lucide.createIcons();
+        }
 
-            // Show selected view
-            const selectedView = document.getElementById('view-' + viewName);
-            selectedView.classList.remove('hidden');
+        // CRUD Operations
+        function openEditModal(id = null) {
+            const modal = document.getElementById('edit-modal');
+            const title = document.getElementById('modal-title');
+            
+            // Clear inputs
+            document.getElementById('edit-id').value = '';
+            document.getElementById('edit-name').value = '';
+            document.getElementById('edit-price').value = '';
+            document.getElementById('edit-desc').value = '';
+            document.getElementById('edit-image').value = '';
+            document.getElementById('edit-category').value = 'classic';
 
-            // Handle Scroll
-            if (sectionScroll && viewName === 'home') {
-                // Allow a tiny delay for the DOM to reveal the element before scrolling
-                setTimeout(() => {
-                    scrollToSection(sectionScroll);
-                }, 10);
+            if (id) {
+                const item = menuData.find(i => i.id === id);
+                if (item) {
+                    document.getElementById('edit-id').value = item.id;
+                    document.getElementById('edit-name').value = item.name;
+                    document.getElementById('edit-price').value = item.price;
+                    document.getElementById('edit-desc').value = item.desc;
+                    document.getElementById('edit-image').value = item.image;
+                    document.getElementById('edit-category').value = item.category;
+                    title.innerText = "Edit Burger";
+                }
+            } else {
+                title.innerText = "Add New Burger";
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+        }
+
+        function saveItemData() {
+            const id = document.getElementById('edit-id').value;
+            const name = document.getElementById('edit-name').value;
+            const price = parseFloat(document.getElementById('edit-price').value);
+            const desc = document.getElementById('edit-desc').value;
+            const image = document.getElementById('edit-image').value || "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500";
+            const category = document.getElementById('edit-category').value;
+
+            if (!name || isNaN(price)) {
+                alert("Please provide valid name and price.");
+                return;
+            }
+
+            if (id) {
+                // Update
+                const idx = menuData.findIndex(i => i.id == id);
+                if (idx !== -1) menuData[idx] = { id: Number(id), name, price, desc, image, category };
+            } else {
+                // Create
+                const newId = menuData.length > 0 ? Math.max(...menuData.map(i => i.id)) + 1 : 1;
+                menuData.push({ id: newId, name, price, desc, image, category });
+            }
+
+            localStorage.setItem('pierre_porte_v2_menu', JSON.stringify(menuData));
+            renderAdminTable();
+            renderSiteMenu();
+            closeEditModal();
+        }
+
+        function deleteBurger(id) {
+            if (confirm("Remove this burger from the menu?")) {
+                menuData = menuData.filter(i => i.id !== id);
+                localStorage.setItem('pierre_porte_v2_menu', JSON.stringify(menuData));
+                renderAdminTable();
+                renderSiteMenu();
+            }
+        }
+
+        // --- 4. NAVIGATION ---
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function mobileNav(section) {
+            toggleMobileMenu();
+            switchView('home', section);
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+        }
+
+        function switchView(viewName, scrollTarget = null) {
+            const views = ['home', 'admin-login', 'admin-dashboard'];
+            views.forEach(v => document.getElementById('view-' + v).classList.add('hidden'));
+            
+            document.getElementById('view-' + viewName).classList.remove('hidden');
+            
+            if (scrollTarget && viewName === 'home') {
+                setTimeout(() => scrollToSection(scrollTarget), 50);
             } else {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
+
+        // Initial Boot
+        document.getElementById('year').textContent = new Date().getFullYear();
+        renderSiteMenu();
+        lucide.createIcons();
+
     </script>
 </body>
 </html>
