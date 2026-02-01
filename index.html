@@ -182,7 +182,6 @@
                 <button onclick="handleLogin()" class="w-full bg-brand-dark text-white py-4 rounded-xl font-bold hover:bg-brand-red transition shadow-lg">Login Now</button>
                 <button onclick="switchView('home')" class="w-full text-gray-400 hover:text-gray-600 font-medium">Cancel</button>
             </div>
-            <p class="text-center text-xs text-gray-400 mt-8 uppercase tracking-widest">Default: admin</p>
         </div>
     </section>
 
@@ -191,14 +190,14 @@
         <div class="max-w-6xl mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
                 <div>
-                    <h2 class="text-4xl font-serif font-bold text-gray-900">Menu Management</h2>
-                    <p class="text-gray-500">Live updates reflected on website instantly</p>
+                    <h2 class="text-4xl font-serif font-bold text-gray-900">Admin Dashboard</h2>
+                    <p class="text-gray-500">Manage your menu categories, items, and pricing.</p>
                 </div>
                 <div class="flex gap-4">
-                    <button onclick="openEditModal()" class="px-6 py-3 bg-brand-dark text-white rounded-xl font-bold hover:bg-gray-800 flex items-center gap-2 shadow-md">
-                        <i data-lucide="plus-circle" class="w-5 h-5"></i> Add Burger
+                    <button onclick="openEditModal()" class="px-6 py-3 bg-brand-red text-white rounded-xl font-bold hover:bg-red-700 flex items-center gap-2 shadow-md transition">
+                        <i data-lucide="plus-circle" class="w-5 h-5"></i> Add New Burger
                     </button>
-                    <button onclick="logoutAdmin()" class="px-6 py-3 border border-gray-200 bg-white text-gray-600 rounded-xl font-bold hover:bg-gray-100 flex items-center gap-2">
+                    <button onclick="logoutAdmin()" class="px-6 py-3 border border-gray-200 bg-white text-gray-600 rounded-xl font-bold hover:bg-gray-100 flex items-center gap-2 transition">
                         <i data-lucide="log-out" class="w-5 h-5"></i> Logout
                     </button>
                 </div>
@@ -210,7 +209,7 @@
                     <table class="w-full text-left">
                         <thead class="bg-gray-50 border-b border-gray-100">
                             <tr>
-                                <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Item</th>
+                                <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Product</th>
                                 <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Category</th>
                                 <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Price (IDR)</th>
                                 <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase text-right">Actions</th>
@@ -227,7 +226,10 @@
     <div id="edit-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
         <div class="modal-content bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
             <div class="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <h3 class="text-2xl font-bold text-gray-900" id="modal-title">Edit Item</h3>
+                <div class="flex items-center gap-3">
+                    <i data-lucide="layout-grid" class="text-brand-gold w-6 h-6"></i>
+                    <h3 class="text-2xl font-bold text-gray-900" id="modal-title">Edit Item</h3>
+                </div>
                 <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
@@ -237,36 +239,37 @@
                 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Burger Name</label>
-                    <input type="text" id="edit-name" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none">
+                    <input type="text" id="edit-name" placeholder="e.g. Classic Wagyu" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none">
                 </div>
                 
                 <div class="grid grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Price (Rp)</label>
-                        <input type="number" id="edit-price" step="500" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none">
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Category</label>
+                        <select id="edit-category" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none bg-white font-medium text-gray-700">
+                            <option value="classic">CLASSIC BURGERS</option>
+                            <option value="signature">SIGNATURE SPECIALS</option>
+                            <option value="sides">SIDES & DRINKS</option>
+                        </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Category</label>
-                        <select id="edit-category" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none bg-white">
-                            <option value="classic">Classic</option>
-                            <option value="signature">Signature</option>
-                        </select>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Price (Rp)</label>
+                        <input type="number" id="edit-price" step="500" placeholder="85000" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none">
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Description</label>
-                    <textarea id="edit-desc" rows="3" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none resize-none"></textarea>
+                    <textarea id="edit-desc" rows="3" placeholder="Describe the ingredients..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none resize-none"></textarea>
                 </div>
 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2">Image URL</label>
-                    <input type="text" id="edit-image" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none text-sm text-gray-500">
+                    <input type="text" id="edit-image" placeholder="https://..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none text-sm text-gray-500">
                 </div>
             </div>
             <div class="px-8 py-6 bg-gray-50 border-t border-gray-100 flex justify-end gap-4">
                 <button onclick="closeEditModal()" class="px-6 py-3 text-gray-500 font-bold hover:bg-gray-200 rounded-xl transition">Cancel</button>
-                <button onclick="saveItemData()" class="px-8 py-3 bg-brand-red text-white font-bold rounded-xl shadow-lg hover:bg-red-700 transition">Save Burger</button>
+                <button onclick="saveItemData()" class="px-8 py-3 bg-brand-red text-white font-bold rounded-xl shadow-lg hover:bg-red-700 transition">Save Changes</button>
             </div>
         </div>
     </div>
@@ -275,7 +278,6 @@
     <footer class="bg-white border-t border-gray-100 py-12 mt-auto">
         <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="text-center md:text-left">
-                <!-- Hidden Link on the "P" letter -->
                 <h4 class="font-serif font-bold text-xl text-brand-dark">
                     <span class="cursor-pointer hover:text-brand-red transition" onclick="switchView('admin-login')">P</span>ierre Porte
                 </h4>
@@ -308,7 +310,7 @@
             { id: 10, name: "The Crown Burger 👑", price: 155000, category: "signature", desc: "The King of burgers. Wagyu beef, truffle mayo, brioche bun.", image: "https://images.unsplash.com/photo-1520072959219-c595dc870360?auto=format&fit=crop&w=800&q=80" }
         ];
 
-        let menuData = JSON.parse(localStorage.getItem('pierre_porte_v2_menu')) || initialMenu;
+        let menuData = JSON.parse(localStorage.getItem('pierre_porte_v3_menu')) || initialMenu;
 
         // --- 2. CORE FUNCTIONS ---
 
@@ -316,16 +318,25 @@
             const container = document.getElementById('menu-container');
             container.innerHTML = '';
 
-            const categories = ['classic', 'signature'];
-            categories.forEach(cat => {
+            // Get unique categories and preserve order based on select options
+            const categoryOrder = ['classic', 'signature', 'sides'];
+            const activeCategories = [...new Set(menuData.map(i => i.category))].sort((a, b) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b));
+
+            activeCategories.forEach(cat => {
                 const items = menuData.filter(i => i.category === cat);
                 if (items.length === 0) return;
+
+                const categoryLabels = {
+                    'classic': 'Classic Selection',
+                    'signature': 'Signature Specials',
+                    'sides': 'Sides & Drinks'
+                };
 
                 const section = document.createElement('div');
                 section.className = "mb-20 animate-fade-in-up";
                 section.innerHTML = `
                     <div class="flex items-center gap-4 mb-10">
-                        <h3 class="text-3xl font-serif font-bold text-gray-900 capitalize">${cat} Selection</h3>
+                        <h3 class="text-3xl font-serif font-bold text-gray-900 capitalize">${categoryLabels[cat] || cat}</h3>
                         <div class="flex-grow h-px bg-gray-100"></div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
@@ -333,7 +344,7 @@
                             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all group flex flex-col h-full">
                                 <div class="h-64 overflow-hidden relative">
                                     <img src="${item.image}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500'">
-                                    <div class="absolute top-4 right-4 bg-brand-red text-white font-bold px-4 py-1 rounded-full shadow-lg">${formatIDR(item.price)}</div>
+                                    <div class="absolute top-4 right-4 bg-brand-red text-white font-bold px-4 py-1 rounded-full shadow-lg text-sm">${formatIDR(item.price)}</div>
                                 </div>
                                 <div class="p-8 flex flex-col flex-grow">
                                     <h4 class="text-2xl font-bold text-gray-900 mb-3">${item.name}</h4>
@@ -384,12 +395,14 @@
                         </div>
                     </td>
                     <td class="px-6 py-6">
-                        <span class="px-3 py-1 bg-gray-100 rounded-lg text-xs font-bold uppercase tracking-widest text-gray-500">${item.category}</span>
+                        <span class="px-4 py-1.5 bg-brand-gold/10 text-brand-gold rounded-lg text-xs font-black uppercase tracking-widest">
+                            ${item.category}
+                        </span>
                     </td>
                     <td class="px-6 py-6 font-bold text-brand-red">${formatIDR(item.price)}</td>
                     <td class="px-6 py-6 text-right space-x-2">
-                        <button onclick="openEditModal(${item.id})" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"><i data-lucide="edit-3" class="w-5 h-5"></i></button>
-                        <button onclick="deleteBurger(${item.id})" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+                        <button onclick="openEditModal(${item.id})" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit Item"><i data-lucide="edit-3" class="w-5 h-5"></i></button>
+                        <button onclick="deleteBurger(${item.id})" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition" title="Delete Item"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -397,7 +410,6 @@
             lucide.createIcons();
         }
 
-        // CRUD Operations
         function openEditModal(id = null) {
             const modal = document.getElementById('edit-modal');
             const title = document.getElementById('modal-title');
@@ -419,12 +431,13 @@
                     document.getElementById('edit-desc').value = item.desc;
                     document.getElementById('edit-image').value = item.image;
                     document.getElementById('edit-category').value = item.category;
-                    title.innerText = "Edit Burger";
+                    title.innerText = "Update Burger Details";
                 }
             } else {
-                title.innerText = "Add New Burger";
+                title.innerText = "Add Menu Item";
             }
             modal.classList.remove('hidden');
+            lucide.createIcons();
         }
 
         function closeEditModal() {
@@ -445,25 +458,23 @@
             }
 
             if (id) {
-                // Update
                 const idx = menuData.findIndex(i => i.id == id);
                 if (idx !== -1) menuData[idx] = { id: Number(id), name, price, desc, image, category };
             } else {
-                // Create
                 const newId = menuData.length > 0 ? Math.max(...menuData.map(i => i.id)) + 1 : 1;
                 menuData.push({ id: newId, name, price, desc, image, category });
             }
 
-            localStorage.setItem('pierre_porte_v2_menu', JSON.stringify(menuData));
+            localStorage.setItem('pierre_porte_v3_menu', JSON.stringify(menuData));
             renderAdminTable();
             renderSiteMenu();
             closeEditModal();
         }
 
         function deleteBurger(id) {
-            if (confirm("Remove this burger from the menu?")) {
+            if (confirm("Remove this item from the menu permanently?")) {
                 menuData = menuData.filter(i => i.id !== id);
-                localStorage.setItem('pierre_porte_v2_menu', JSON.stringify(menuData));
+                localStorage.setItem('pierre_porte_v3_menu', JSON.stringify(menuData));
                 renderAdminTable();
                 renderSiteMenu();
             }
