@@ -1,639 +1,662 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pierre Porte Restaurant | Admin Controlled Menu</title>
-    <meta name="description" content="Authentic burgers in Jimbaran, Indonesia. Order via WhatsApp.">
-    
-    <!-- Tailwind CSS -->
+    <title>ORAMA | The Art of Gastronomy</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'brand-gold': '#D4AF37',
-                        'brand-dark': '#1a1a1a',
-                        'brand-red': '#A33333',
-                        'brand-bg': '#fdfbf7',
-                    },
-                    fontFamily: {
-                        serif: ['Playfair Display', 'serif'],
-                        sans: ['Lato', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #A33333; border-radius: 4px; }
-        
-        .hero-pattern {
-            background-color: #1a1a1a;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1550547660-d9450f859349?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f1e5ac;
+            --gold-dark: #996515;
+            --midnight: #050505;
+            --slate: #0f0f10;
         }
 
-        @keyframes fade-in-up {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        body {
+            background-color: var(--midnight);
+            color: #e5e5e5;
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            letter-spacing: 0.02em;
         }
-        .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
+
+        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--midnight); }
+        ::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 10px; }
+
+        /* Luxury Styling */
+        .gold-gradient-text {
+            background: linear-gradient(to right, var(--gold-dark), var(--gold-light), var(--gold-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .gold-border-glow {
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.05);
+            transition: all 0.5s ease;
+        }
+
+        .gold-border-glow:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
+        }
+
+        .hero-video-overlay {
+            background: linear-gradient(to bottom, rgba(5,5,5,0.7) 0%, rgba(5,5,5,0.4) 50%, rgba(5,5,5,1) 100%);
+        }
+
+        .nav-link {
+            position: relative;
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            transition: color 0.4s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -5px;
+            left: 0;
+            background: var(--gold);
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-link:hover::after { width: 100%; }
+        .nav-link:hover { color: var(--gold-light); }
+
+        .btn-gold {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 1rem 2.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            font-size: 0.75rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            z-index: 1;
+        }
+
+        .btn-gold:hover { color: var(--midnight); }
+        .btn-gold::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: var(--gold);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: -1;
+        }
+        .btn-gold:hover::before { left: 0; }
+
+        /* Mobile Menu Overlay */
+        #mobile-menu {
+            transform: translateY(-100%);
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(5, 5, 5, 0.98);
+            backdrop-filter: blur(20px);
+        }
+        #mobile-menu.active {
+            transform: translateY(0);
+        }
+
+        /* Swiper Overrides */
+        .swiper-button-next, .swiper-button-prev { color: var(--gold) !important; scale: 0.7; }
+        .swiper-pagination-bullet { background: var(--gold) !important; opacity: 0.3; }
+        .swiper-pagination-bullet-active { opacity: 1; width: 20px; border-radius: 4px; }
+
+        /* Admin UI */
+        #admin-panel {
+            z-index: 9999;
+            background: rgba(5, 5, 5, 0.98);
+            backdrop-filter: blur(20px);
+        }
         
-        /* Modal Animation */
-        #edit-modal:not(.hidden) .modal-content, #category-modal:not(.hidden) .modal-content {
-            animation: zoom-in 0.3s ease-out forwards;
+        .floating-label {
+            position: absolute;
+            pointer-events: none;
+            left: 15px;
+            top: 15px;
+            transition: 0.2s ease all;
+            color: #666;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
-        @keyframes zoom-in {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+
+        input:focus ~ .floating-label, input:not(:placeholder-shown) ~ .floating-label {
+            top: -20px;
+            left: 5px;
+            font-size: 0.6rem;
+            color: var(--gold);
+        }
+
+        .menu-grid-item {
+            opacity: 0;
+            transform: translateY(30px);
         }
     </style>
 </head>
-<body class="bg-brand-bg text-gray-800 font-sans antialiased flex flex-col min-h-screen">
+<body class="antialiased">
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-sm shadow-md h-20 flex items-center" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div class="flex justify-between items-center">
-                <div class="flex-shrink-0 cursor-pointer" onclick="switchView('home')">
-                    <h1 class="font-serif text-2xl font-bold text-brand-red flex items-center gap-2">
-                        <i data-lucide="utensils-crossed" class="w-6 h-6"></i>
-                        Pierre Porte
-                    </h1>
-                </div>
-
-                <div class="hidden md:flex space-x-8 items-center">
-                    <button onclick="switchView('home', 'home-hero')" class="text-gray-700 hover:text-brand-red font-medium transition">Home</button>
-                    <button onclick="switchView('home', 'menu')" class="text-gray-700 hover:text-brand-red font-medium transition">Menu</button>
-                    <button onclick="switchView('home', 'about')" class="text-gray-700 hover:text-brand-red font-medium transition">About</button>
-                    <button onclick="switchView('home', 'contact')" class="ml-4 px-5 py-2 bg-green-600 text-white rounded-full hover:bg-green-700 transition flex items-center gap-2 shadow-sm font-bold">
-                        <i data-lucide="phone" class="w-4 h-4"></i> WhatsApp Order
-                    </button>
-                </div>
-
-                <div class="md:hidden flex items-center">
-                    <button onclick="toggleMobileMenu()" class="text-gray-700 hover:text-brand-red">
-                        <i data-lucide="menu" class="w-8 h-8"></i>
-                    </button>
-                </div>
+    <!-- Preloader -->
+    <div id="loader" class="fixed inset-0 bg-midnight z-[100] flex items-center justify-center">
+        <div class="text-center">
+            <div class="font-cinzel text-2xl tracking-[0.5em] gold-gradient-text animate-pulse">ORAMA</div>
+            <div class="mt-4 h-px w-24 bg-gold/20 mx-auto relative overflow-hidden">
+                <div class="absolute inset-0 bg-gold animate-[loading_2s_infinite]"></div>
             </div>
         </div>
+    </div>
 
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden absolute top-20 left-0 w-full bg-white border-b shadow-lg md:hidden">
-            <div class="px-4 py-6 space-y-4">
-                <button onclick="mobileNav('home-hero')" class="block w-full text-left text-lg font-medium text-gray-700">Home</button>
-                <button onclick="mobileNav('menu')" class="block w-full text-left text-lg font-medium text-gray-700">Menu</button>
-                <button onclick="mobileNav('about')" class="block w-full text-left text-lg font-medium text-gray-700">About</button>
-                <button onclick="mobileNav('contact')" class="block w-full text-center py-3 bg-green-600 text-white rounded-lg font-bold">Order Now</button>
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 px-6 py-8 transition-all duration-700" id="navbar">
+        <div class="max-w-screen-2xl mx-auto flex justify-between items-center">
+            <a href="#home" class="text-2xl md:text-3xl font-cinzel tracking-[0.4em] gold-gradient-text">ORAMA</a>
+            
+            <!-- Desktop Links -->
+            <div class="hidden lg:flex space-x-12">
+                <a href="#home" class="nav-link">Essence</a>
+                <a href="#about" class="nav-link">Heritage</a>
+                <a href="#menu" class="nav-link">Curation</a>
+                <a href="#gallery" class="nav-link">Vision</a>
+                <a href="#reservation" class="nav-link">Sanctuary</a>
+            </div>
+            
+            <div class="flex items-center gap-6">
+                <a href="#reservation" class="hidden sm:block text-[10px] tracking-[0.3em] uppercase border border-gold/30 px-6 py-2 hover:bg-gold hover:text-midnight transition-all">Reserve</a>
+                <button id="menu-toggle" class="lg:hidden text-gold focus:outline-none">
+                    <svg id="menu-icon" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8h16M4 16h16"></path>
+                    </svg>
+                </button>
             </div>
         </div>
     </nav>
 
-    <!-- VIEWS -->
-    <main id="view-home" class="flex-grow pt-20">
-        <!-- Hero -->
-        <section id="home-hero" class="hero-pattern h-[85vh] flex items-center justify-center text-center text-white px-4">
-            <div class="max-w-4xl animate-fade-in-up">
-                <span class="text-brand-gold font-serif text-xl italic tracking-wider mb-4 block">Welcome to Jimbaran</span>
-                <h2 class="text-5xl md:text-7xl font-serif font-bold mb-6 leading-tight">Pierre Porte <br> Restaurant</h2>
-                <p class="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">Premium burgers, authentic vibes, and unforgettable flavors in the heart of Indonesia.</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button onclick="scrollToSection('menu')" class="px-8 py-4 bg-brand-red hover:bg-red-700 text-white font-bold rounded-lg transition transform hover:-translate-y-1 shadow-lg">View Menu</button>
-                    <a href="https://wa.me/6281139628202" target="_blank" class="px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg transition transform hover:-translate-y-1 shadow-lg flex items-center justify-center gap-2">
-                        <i data-lucide="message-circle"></i> WhatsApp Order
-                    </a>
-                </div>
-            </div>
-        </section>
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-[49] flex flex-col items-center justify-center space-y-10 lg:hidden">
+        <a href="#home" class="mobile-nav-link text-xl tracking-[0.4em] uppercase font-cinzel text-gold">Essence</a>
+        <a href="#about" class="mobile-nav-link text-xl tracking-[0.4em] uppercase font-cinzel">Heritage</a>
+        <a href="#menu" class="mobile-nav-link text-xl tracking-[0.4em] uppercase font-cinzel">Curation</a>
+        <a href="#gallery" class="mobile-nav-link text-xl tracking-[0.4em] uppercase font-cinzel">Vision</a>
+        <a href="#reservation" class="mobile-nav-link text-xl tracking-[0.4em] uppercase font-cinzel">Sanctuary</a>
+    </div>
 
-        <!-- Menu -->
-        <section id="menu" class="py-24 bg-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-4xl font-serif font-bold text-gray-900 mb-4">Our Menu</h2>
-                    <div class="w-20 h-1 bg-brand-gold mx-auto mb-6"></div>
-                </div>
-                <div id="menu-container"></div>
+    <!-- Hero Section -->
+    <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=90&w=2400" class="w-full h-full object-cover scale-110" id="hero-bg">
+            <div class="absolute inset-0 hero-video-overlay"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-4 max-w-5xl">
+            <div id="hero-eyebrow" class="text-[10px] uppercase tracking-[1em] text-gold mb-8 opacity-0">London • Tokyo • New York</div>
+            <h1 id="hero-title" class="text-6xl md:text-9xl font-serif leading-tight mb-8 opacity-0">
+                Culinary <br><span class="italic gold-gradient-text">Transcendence</span>
+            </h1>
+            <p id="hero-text" class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto mb-12 tracking-wide leading-relaxed font-light opacity-0">
+                A sanctuary where the elements of nature converge with the precision of art. Discover a symphony of flavors curated for the most discerning palates.
+            </p>
+            <div id="hero-actions" class="flex flex-col sm:flex-row items-center justify-center gap-6 opacity-0">
+                <a href="#reservation" class="btn-gold">Private Selection</a>
+                <a href="#menu" class="text-[10px] uppercase tracking-[0.4em] text-white hover:text-gold transition-colors border-b border-white/20 pb-1">Explore Menu</a>
             </div>
-        </section>
+        </div>
 
-        <!-- About -->
-        <section id="about" class="py-24 bg-brand-bg border-t border-gray-100">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
-                    <div class="h-96 rounded-2xl overflow-hidden shadow-2xl">
-                        <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1000&q=80" class="w-full h-full object-cover">
-                    </div>
-                    <div>
-                        <h3 class="text-brand-red font-bold uppercase mb-4 text-sm tracking-widest">Our Story</h3>
-                        <h2 class="text-4xl font-serif font-bold text-gray-900 mb-6">Culinary Excellence</h2>
-                        <p class="text-gray-600 text-lg leading-relaxed mb-6">Located at JL Teges Gede No 21, Mumbul, Jimbaran, Pierre Porte Restaurant blends western grilling mastery with local Indonesian hospitality.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- WhatsApp/Contact -->
-        <section id="contact" class="py-24 bg-brand-dark text-white text-center">
-            <div class="max-w-4xl mx-auto px-4">
-                <h2 class="text-4xl font-serif font-bold mb-8">Ready to Order?</h2>
-                <div class="bg-white p-8 rounded-3xl shadow-2xl inline-block mb-8">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://wa.me/6281139628202" alt="QR" class="w-48 h-48 mx-auto">
-                </div>
-                <p class="text-gray-300 text-lg mb-8">Scan to order via WhatsApp or click below.</p>
-                <a href="https://wa.me/6281139628202" target="_blank" class="px-12 py-5 bg-green-600 hover:bg-green-700 text-white font-bold text-xl rounded-full transition-all shadow-xl inline-flex items-center gap-3">
-                    <i data-lucide="message-circle"></i> +62 811 3962 8202
-                </a>
-            </div>
-        </section>
-    </main>
-
-    <!-- ADMIN LOGIN -->
-    <section id="view-admin-login" class="hidden flex-grow flex items-center justify-center bg-gray-100 py-32 px-4">
-        <div class="max-w-md w-full bg-white p-10 rounded-2xl shadow-xl border border-gray-200">
-            <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-brand-gold/10 text-brand-gold rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i data-lucide="shield-check" class="w-8 h-8"></i>
-                </div>
-                <h2 class="text-3xl font-bold text-gray-900">Admin Panel</h2>
-                <p class="text-gray-500 mt-2">Enter credentials to manage menu</p>
-            </div>
-            <div class="space-y-6">
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Password</label>
-                    <input type="password" id="admin-password" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none transition" placeholder="••••••••">
-                    <p id="login-error" class="text-red-500 text-sm mt-2 hidden">Incorrect password.</p>
-                </div>
-                <button onclick="handleLogin()" class="w-full bg-brand-dark text-white py-4 rounded-xl font-bold hover:bg-brand-red transition shadow-lg">Login Now</button>
-                <button onclick="switchView('home')" class="w-full text-gray-400 hover:text-gray-600 font-medium">Cancel</button>
-            </div>
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <div class="w-px h-12 bg-gradient-to-b from-gold/0 to-gold"></div>
         </div>
     </section>
 
-    <!-- ADMIN DASHBOARD -->
-    <section id="view-admin-dashboard" class="hidden flex-grow bg-gray-50 pt-28 pb-20 px-4">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
-                <div>
-                    <h2 class="text-4xl font-serif font-bold text-gray-900">Admin Dashboard</h2>
-                    <p class="text-gray-500">Manage your menu categories, items, and pricing.</p>
+    <!-- Heritage Section -->
+    <section id="about" class="py-32 px-8 bg-slate relative">
+        <div class="max-w-screen-xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-20 items-center">
+                <div class="reveal-up">
+                    <span class="text-[10px] uppercase tracking-[0.5em] text-gold mb-4 block font-semibold">The Orama Philosophy</span>
+                    <h2 class="text-5xl md:text-6xl font-serif mb-8 leading-tight">Mastery in <br><span class="italic">Every Nuance</span></h2>
+                    <p class="text-gray-400 leading-loose mb-10 font-light">
+                        At Orama, we believe that dining is not merely the consumption of food, but a profound cultural exchange. Our philosophy is rooted in "Orama" — the ancient Greek vision of seeing beyond the physical form to the spirit within.
+                    </p>
+                    <div class="grid grid-cols-2 gap-12 py-10 border-y border-white/5">
+                        <div>
+                            <span class="text-3xl font-serif gold-gradient-text mb-2 block">120+</span>
+                            <span class="text-[9px] uppercase tracking-widest text-gray-500">Rare Vintages</span>
+                        </div>
+                        <div>
+                            <span class="text-3xl font-serif gold-gradient-text mb-2 block">Michelin</span>
+                            <span class="text-[9px] uppercase tracking-widest text-gray-500">Service Standards</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex gap-4">
-                    <button onclick="openCategoryManagement()" class="px-6 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl font-bold hover:bg-gray-100 flex items-center gap-2 shadow-sm transition">
-                        <i data-lucide="layers" class="w-5 h-5"></i> Manage Categories
-                    </button>
-                    <button onclick="openEditModal()" class="px-6 py-3 bg-brand-red text-white rounded-xl font-bold hover:bg-red-700 flex items-center gap-2 shadow-md transition">
-                        <i data-lucide="plus-circle" class="w-5 h-5"></i> Add New Burger
-                    </button>
-                    <button onclick="logoutAdmin()" class="px-6 py-3 border border-gray-200 bg-white text-gray-600 rounded-xl font-bold hover:bg-gray-100 flex items-center gap-2 transition">
-                        <i data-lucide="log-out" class="w-5 h-5"></i> Logout
-                    </button>
-                </div>
-            </div>
-
-            <!-- Dashboard Table -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left">
-                        <thead class="bg-gray-50 border-b border-gray-100">
-                            <tr>
-                                <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Product</th>
-                                <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Category</th>
-                                <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase">Price (IDR)</th>
-                                <th class="px-6 py-4 text-sm font-bold text-gray-600 uppercase text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-table-body" class="divide-y divide-gray-50"></tbody>
-                    </table>
+                <div class="relative reveal-up">
+                    <div class="gold-border-glow p-4">
+                        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1200" class="w-full h-[600px] object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-1000">
+                    </div>
+                    <div class="absolute -bottom-10 -left-10 bg-midnight p-10 border border-white/5 shadow-2xl hidden md:block">
+                        <p class="font-cinzel text-gold tracking-widest text-xs mb-2">FOUNDED MMXXVI</p>
+                        <p class="text-[9px] text-gray-500 uppercase tracking-tighter">Excellence as a Legacy</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- EDIT ITEM MODAL -->
-    <div id="edit-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
-        <div class="modal-content bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
-            <div class="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="layout-grid" class="text-brand-gold w-6 h-6"></i>
-                    <h3 class="text-2xl font-bold text-gray-900" id="modal-title">Edit Item</h3>
+    <!-- Menu Section -->
+    <section id="menu" class="py-32 px-8 bg-midnight">
+        <div class="max-w-screen-xl mx-auto">
+            <div class="text-center mb-24 reveal-up">
+                <h2 class="text-[10px] uppercase tracking-[0.6em] text-gold mb-6">The Selection</h2>
+                <h3 class="text-5xl md:text-7xl font-serif mb-12">Epicurean Journey</h3>
+                
+                <div class="flex flex-wrap justify-center gap-8 md:gap-16 text-[10px] uppercase tracking-[0.4em] font-medium border-b border-white/5 pb-8">
+                    <button class="menu-filter gold-gradient-text" data-filter="all">All Courses</button>
+                    <button class="menu-filter text-gray-500 hover:text-white transition" data-filter="starter">Premier</button>
+                    <button class="menu-filter text-gray-500 hover:text-white transition" data-filter="main">Signature</button>
+                    <button class="menu-filter text-gray-500 hover:text-white transition" data-filter="dessert">Finale</button>
                 </div>
-                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
             </div>
-            <div class="p-8 space-y-6">
-                <input type="hidden" id="edit-id">
+
+            <div id="menu-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
+                <!-- Dynamic Items -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-32 bg-slate overflow-hidden">
+        <div class="max-w-screen-2xl mx-auto px-8 mb-20 flex justify-between items-end reveal-up">
+            <div>
+                <h2 class="text-[10px] uppercase tracking-[0.6em] text-gold mb-4">Atmosphere</h2>
+                <h3 class="text-4xl md:text-6xl font-serif italic">The Visual Echo</h3>
+            </div>
+            <div class="hidden md:flex gap-4">
+                <div class="swiper-nav-prev cursor-pointer hover:text-gold transition"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 19l-7-7 7-7"></path></svg></div>
+                <div class="swiper-nav-next cursor-pointer hover:text-gold transition"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5l7 7-7 7"></path></svg></div>
+            </div>
+        </div>
+
+        <div class="swiper mainSwiper reveal-up">
+            <div class="swiper-wrapper" id="gallery-wrapper">
+                <!-- Dynamic Slides -->
+            </div>
+            <div class="swiper-pagination !bottom-10"></div>
+        </div>
+    </section>
+
+    <!-- Reservation -->
+    <section id="reservation" class="py-40 bg-midnight relative">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0" style="background-image: radial-gradient(var(--gold) 0.5px, transparent 0.5px); background-size: 30px 30px;"></div>
+        </div>
+        
+        <div class="max-w-4xl mx-auto px-8 relative z-10">
+            <div class="gold-border-glow bg-slate/50 backdrop-blur-3xl p-10 md:p-20 text-center">
+                <h2 class="text-[10px] uppercase tracking-[0.7em] text-gold mb-8">Reservations</h2>
+                <h3 class="text-5xl font-serif mb-12">Request an Audience</h3>
                 
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Burger Name</label>
-                    <input type="text" id="edit-name" placeholder="e.g. Classic Wagyu" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none">
-                </div>
-                
-                <div class="grid grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Category</label>
-                        <select id="edit-category" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none bg-white font-medium text-gray-700">
-                            <!-- Populated dynamically -->
+                <form id="res-form" class="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
+                    <div class="relative">
+                        <input type="text" id="res-name" placeholder=" " class="w-full bg-transparent border-b border-white/20 py-4 focus:outline-none focus:border-gold transition-all">
+                        <label class="floating-label">Guest Identity</label>
+                    </div>
+                    <div class="relative">
+                        <select id="res-guests" class="w-full bg-transparent border-b border-white/20 py-4 focus:outline-none focus:border-gold transition-all appearance-none cursor-pointer">
+                            <option value="2" class="bg-midnight">Party of Two</option>
+                            <option value="4" class="bg-midnight">Party of Four</option>
+                            <option value="6" class="bg-midnight">Party of Six</option>
+                            <option value="private" class="bg-midnight">Private Chambers</option>
                         </select>
+                        <label class="floating-label">Magnitude</label>
                     </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Price (Rp)</label>
-                        <input type="number" id="edit-price" step="500" placeholder="85000" class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none">
+                    <div class="md:col-span-2 text-center pt-8">
+                        <button type="button" onclick="handleReservation()" class="btn-gold w-full md:w-auto px-20">Inquire Availability</button>
                     </div>
-                </div>
+                </form>
 
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Description</label>
-                    <textarea id="edit-desc" rows="3" placeholder="Describe the ingredients..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none resize-none"></textarea>
+                <div id="success-msg" class="hidden py-10 animate-fade-in">
+                    <div class="text-gold text-5xl mb-6">✧</div>
+                    <h4 class="font-serif text-2xl mb-4">Inquiry Received</h4>
+                    <p class="text-gray-500 text-sm tracking-widest uppercase">Our Maître d’ will contact you shortly.</p>
                 </div>
-
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2">Image URL</label>
-                    <input type="text" id="edit-image" placeholder="https://..." class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none text-sm text-gray-500">
-                </div>
-            </div>
-            <div class="px-8 py-6 bg-gray-50 border-t border-gray-100 flex justify-end gap-4">
-                <button onclick="closeEditModal()" class="px-6 py-3 text-gray-500 font-bold hover:bg-gray-200 rounded-xl transition">Cancel</button>
-                <button onclick="saveItemData()" class="px-8 py-3 bg-brand-red text-white font-bold rounded-xl shadow-lg hover:bg-red-700 transition">Save Changes</button>
             </div>
         </div>
-    </div>
-
-    <!-- CATEGORY MANAGEMENT MODAL -->
-    <div id="category-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
-        <div class="modal-content bg-white w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden">
-            <div class="px-8 py-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <div class="flex items-center gap-3">
-                    <i data-lucide="layers" class="text-brand-gold w-6 h-6"></i>
-                    <h3 class="text-2xl font-bold text-gray-900">Manage Categories</h3>
-                </div>
-                <button onclick="closeCategoryModal()" class="text-gray-400 hover:text-gray-600 transition">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-            </div>
-            <div class="p-8">
-                <div class="flex gap-2 mb-6">
-                    <input type="text" id="new-category-name" placeholder="New Category Name..." class="flex-grow px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-gold outline-none">
-                    <button onclick="addCategory()" class="px-6 py-3 bg-brand-dark text-white font-bold rounded-xl hover:bg-brand-red transition">Add</button>
-                </div>
-                
-                <div class="max-h-[300px] overflow-y-auto space-y-2" id="category-list">
-                    <!-- Categories listed here -->
-                </div>
-            </div>
-            <div class="px-8 py-6 bg-gray-50 border-t border-gray-100 text-right">
-                <button onclick="closeCategoryModal()" class="px-8 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition">Done</button>
-            </div>
-        </div>
-    </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-100 py-12 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="text-center md:text-left">
-                <h4 class="font-serif font-bold text-xl text-brand-dark">
-                    <span class="cursor-pointer hover:text-brand-red transition" onclick="switchView('admin-login')">P</span>ierre Porte
-                </h4>
-                <p class="text-gray-400 text-sm">Jimbaran, Bali</p>
+    <footer class="bg-midnight pt-32 pb-12 border-t border-white/5 px-8">
+        <div class="max-w-screen-2xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-20 mb-32">
+                <div class="col-span-1 md:col-span-1">
+                    <div id="footer-logo" class="text-3xl font-cinzel tracking-[0.5em] gold-gradient-text mb-10 cursor-pointer select-none">ORAMA</div>
+                    <p class="text-gray-500 text-xs tracking-widest leading-loose uppercase">Where culinary mastery meets the ethereal. Established to redefine the standards of global hospitality.</p>
+                </div>
+                <div>
+                    <h4 class="text-[10px] uppercase tracking-[0.4em] text-gold mb-10 font-bold">Discover</h4>
+                    <ul class="space-y-6 text-[10px] uppercase tracking-[0.2em] text-gray-400">
+                        <li><a href="#home" class="hover:text-gold transition">The Essence</a></li>
+                        <li><a href="#menu" class="hover:text-gold transition">The Curation</a></li>
+                        <li><a href="#gallery" class="hover:text-gold transition">The Vision</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-[10px] uppercase tracking-[0.4em] text-gold mb-10 font-bold">Location</h4>
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 leading-relaxed">
+                        122 Lexington Avenue<br>
+                        Manhattan, NY 10016<br>
+                        +1 (212) 555-0198
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-[10px] uppercase tracking-[0.4em] text-gold mb-10 font-bold">Vigilance</h4>
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Monday — Sunday</p>
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 italic mt-2">18:00 — 23:00</p>
+                </div>
             </div>
-            <div class="flex gap-8 text-sm font-bold text-gray-600">
-                <button onclick="switchView('home')" class="hover:text-brand-red">Home</button>
-                <button onclick="scrollToSection('menu')" class="hover:text-brand-red">Menu</button>
-                <button onclick="scrollToSection('contact')" class="hover:text-brand-red">Contact</button>
+            
+            <div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[8px] tracking-[0.5em] text-gray-600 uppercase">
+                <p>&copy; 2026 ORAMA GROUP • ALL RIGHTS RESERVED</p>
+                <div class="flex gap-8 mt-6 md:mt-0">
+                    <a href="#" class="hover:text-gold transition">Privacy</a>
+                    <a href="#" class="hover:text-gold transition">Terms</a>
+                    <a href="#" class="hover:text-gold transition">Carbon Offset</a>
+                </div>
             </div>
-            <p class="text-gray-400 text-xs">&copy; <span id="year"></span> Pierre Porte Restaurant.</p>
         </div>
     </footer>
 
-    <script>
-        // Helper to format currency
-        function formatIDR(amount) {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(amount);
-        }
+    <!-- Admin Panel (Concierge) -->
+    <div id="admin-panel" class="fixed inset-0 hidden overflow-y-auto px-8 py-20">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex justify-between items-end border-b border-gold/20 pb-10 mb-20">
+                <div>
+                    <h2 class="text-4xl font-serif gold-gradient-text mb-2">Concierge Console</h2>
+                    <p class="text-[9px] tracking-[0.4em] uppercase text-gray-600">Secure Management Interface</p>
+                </div>
+                <button onclick="toggleAdmin()" class="text-[10px] tracking-[0.3em] uppercase border border-white/10 px-8 py-3 hover:bg-white hover:text-midnight transition-all">Close Console</button>
+            </div>
 
-        // --- 1. DATA STATE ---
-        const initialMenu = [
-            { id: 1, name: "The Classic Cheeseburger", price: 85000, category: "classic", desc: "Melted cheddar, fresh lettuce, tomato, and house sauce.", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80" },
-            { id: 6, name: "The Signature Stack", price: 95000, category: "signature", desc: "Our most popular choice. Perfectly balanced flavors.", image: "https://images.unsplash.com/photo-1606754752377-2147d6e19352?auto=format&fit=crop&w=800&q=80" },
-            { id: 10, name: "The Crown Burger 👑", price: 155000, category: "signature", desc: "The King of burgers. Wagyu beef, truffle mayo, brioche bun.", image: "https://images.unsplash.com/photo-1520072959219-c595dc870360?auto=format&fit=crop&w=800&q=80" }
-        ];
-
-        const initialCategories = [
-            { id: "classic", name: "Classic Selection" },
-            { id: "signature", name: "Signature Specials" },
-            { id: "sides", name: "Sides & Drinks" }
-        ];
-
-        let menuData = JSON.parse(localStorage.getItem('pierre_porte_v3_menu')) || initialMenu;
-        let categories = JSON.parse(localStorage.getItem('pierre_porte_v3_categories')) || initialCategories;
-
-        // --- 2. CORE FUNCTIONS ---
-
-        function renderSiteMenu() {
-            const container = document.getElementById('menu-container');
-            container.innerHTML = '';
-
-            // Filter out empty categories
-            categories.forEach(cat => {
-                const items = menuData.filter(i => i.category === cat.id);
-                if (items.length === 0) return;
-
-                const section = document.createElement('div');
-                section.className = "mb-20 animate-fade-in-up";
-                section.innerHTML = `
-                    <div class="flex items-center gap-4 mb-10">
-                        <h3 class="text-3xl font-serif font-bold text-gray-900 capitalize">${cat.name}</h3>
-                        <div class="flex-grow h-px bg-gray-100"></div>
+            <div class="grid lg:grid-cols-3 gap-12">
+                <!-- Reservation Manifest -->
+                <div class="lg:col-span-2">
+                    <h3 class="text-[10px] tracking-[0.4em] uppercase text-gold mb-10">Guest Manifest</h3>
+                    <div class="bg-slate border border-white/5 rounded-sm overflow-hidden">
+                        <table class="w-full text-left text-[9px] uppercase tracking-widest">
+                            <thead class="bg-white/5 text-gray-500">
+                                <tr>
+                                    <th class="p-6">Client</th>
+                                    <th class="p-6">Party</th>
+                                    <th class="p-6">Time</th>
+                                    <th class="p-6">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-res-list" class="divide-y divide-white/5">
+                                <!-- Dynamic -->
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                        ${items.map(item => `
-                            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all group flex flex-col h-full">
-                                <div class="h-64 overflow-hidden relative">
-                                    <img src="${item.image}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500'">
-                                    <div class="absolute top-4 right-4 bg-brand-red text-white font-bold px-4 py-1 rounded-full shadow-lg text-sm">${formatIDR(item.price)}</div>
-                                </div>
-                                <div class="p-8 flex flex-col flex-grow">
-                                    <h4 class="text-2xl font-bold text-gray-900 mb-3">${item.name}</h4>
-                                    <p class="text-gray-500 text-sm mb-8 flex-grow leading-relaxed">${item.desc}</p>
-                                    <a href="https://wa.me/6281139628202?text=I'd%20like%20to%20order%20the%20${encodeURIComponent(item.name)}" target="_blank" class="w-full py-4 bg-gray-50 rounded-2xl text-center font-bold hover:bg-brand-red hover:text-white transition-all flex items-center justify-center gap-2">
-                                        Order Now <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                                    </a>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-                container.appendChild(section);
-            });
-            lucide.createIcons();
-        }
+                </div>
 
-        // --- 3. ADMIN DASHBOARD LOGIC ---
-
-        function handleLogin() {
-            const pass = document.getElementById('admin-password').value;
-            if (pass === 'admin') {
-                document.getElementById('login-error').classList.add('hidden');
-                switchView('admin-dashboard');
-                renderAdminTable();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        }
-
-        function logoutAdmin() {
-            document.getElementById('admin-password').value = '';
-            switchView('home');
-        }
-
-        function renderAdminTable() {
-            const tbody = document.getElementById('admin-table-body');
-            tbody.innerHTML = '';
-
-            menuData.forEach(item => {
-                const catName = categories.find(c => c.id === item.category)?.name || item.category;
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-gray-50 transition border-b border-gray-50";
-                tr.innerHTML = `
-                    <td class="px-6 py-6">
-                        <div class="flex items-center gap-4">
-                            <img src="${item.image}" class="w-12 h-12 rounded-xl object-cover shadow-sm">
-                            <div class="font-bold text-gray-900">${item.name}</div>
+                <!-- Quick Actions -->
+                <div>
+                    <h3 class="text-[10px] tracking-[0.4em] uppercase text-gold mb-10">System Status</h3>
+                    <div class="space-y-6">
+                        <div class="bg-slate p-8 border border-white/5 rounded-sm">
+                            <p class="text-[8px] text-gray-500 mb-2">DATABASE INTEGRITY</p>
+                            <p class="text-xs text-green-500">Synchronized • 100%</p>
                         </div>
-                    </td>
-                    <td class="px-6 py-6">
-                        <span class="px-4 py-1.5 bg-brand-gold/10 text-brand-gold rounded-lg text-xs font-black uppercase tracking-widest">
-                            ${catName}
-                        </span>
-                    </td>
-                    <td class="px-6 py-6 font-bold text-brand-red">${formatIDR(item.price)}</td>
-                    <td class="px-6 py-6 text-right space-x-2">
-                        <button onclick="openEditModal(${item.id})" class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit Item"><i data-lucide="edit-3" class="w-5 h-5"></i></button>
-                        <button onclick="deleteBurger(${item.id})" class="p-2 text-red-500 hover:bg-red-50 rounded-lg transition" title="Delete Item"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
+                        <div class="bg-slate p-8 border border-white/5 rounded-sm">
+                            <p class="text-[8px] text-gray-500 mb-2">ACTIVE SESSIONS</p>
+                            <p id="guest-count" class="text-xl font-serif">04</p>
+                        </div>
+                        <button onclick="localStorage.clear(); location.reload();" class="w-full text-[9px] tracking-[0.3em] uppercase text-red-500/50 hover:text-red-500 transition py-4 border border-red-500/10">Factory Reset Cache</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <script>
+        // --- DATA & PERSISTENCE ---
+        const DEFAULT_MENU = [
+            { id: 1, name: 'Obsidian Caviar', price: '£140', category: 'starter', desc: 'Beluga pearls, gold-dusted blinis, chive-infused crème fraîche.', img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800' },
+            { id: 2, name: 'Saffron Risotto', price: '£65', category: 'starter', desc: 'Acquerello rice, Persian saffron, bone marrow reduction.', img: 'https://images.unsplash.com/photo-1546039907-7fa05f864c02?auto=format&fit=crop&q=80&w=800' },
+            { id: 3, name: 'A5 Wagyu Strip', price: '£185', category: 'main', desc: 'Miyazaki beef, charcoal-fired, aged soy emulsion, wasabi root.', img: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=800' },
+            { id: 4, name: 'Iberico Pluma', price: '£95', category: 'main', desc: 'Acorn-fed pork, smoked pimentón, fermented garlic, apple cider jus.', img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&q=80&w=800' },
+            { id: 5, name: 'Sea Urchin Pasta', price: '£110', category: 'main', desc: 'Hand-cut tagliolini, Hokkaido uni, bronze-fennel, lemon zest.', img: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&q=80&w=800' },
+            { id: 6, name: 'Velvet Noir', price: '£45', category: 'dessert', desc: '75% Guanaja chocolate, edible silver, truffle-honey core.', img: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=800' }
+        ];
+
+        let menuData = JSON.parse(localStorage.getItem('orama_menu')) || DEFAULT_MENU;
+        let reservationData = JSON.parse(localStorage.getItem('orama_reservations')) || [];
+        let galleryImages = [
+            'https://images.unsplash.com/photo-1550966842-286e58249217?auto=format&fit=crop&q=80&w=1600',
+            'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1600',
+            'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1600',
+            'https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&q=80&w=1600'
+        ];
+
+        // --- CORE UI RENDERING ---
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = menuData.map(item => `
+                <div class="menu-grid-item group" data-category="${item.category}">
+                    <div class="relative overflow-hidden mb-8 aspect-[4/5] gold-border-glow">
+                        <img src="${item.img}" class="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all"></div>
+                        <div class="absolute top-6 right-6 text-[10px] tracking-[0.2em] uppercase bg-midnight/80 px-4 py-2 text-gold">
+                            ${item.price}
+                        </div>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h4 class="font-serif text-2xl mb-3 tracking-wide">${item.name}</h4>
+                        <p class="text-[10px] uppercase tracking-[0.3em] text-gold/60 mb-4">${item.category}</p>
+                        <p class="text-gray-500 text-xs leading-relaxed font-light mb-6 px-4 md:px-0">${item.desc}</p>
+                        <div class="h-px w-8 bg-gold/30 mx-auto md:mx-0"></div>
+                    </div>
+                </div>
+            `).join('');
+
+            gsap.to(".menu-grid-item", {
+                opacity: 1, y: 0, stagger: 0.1, duration: 1, ease: "power3.out",
+                scrollTrigger: { trigger: "#menu-container", start: "top 80%" }
             });
-            lucide.createIcons();
         }
 
-        // --- 4. ITEM MANAGEMENT ---
+        function renderGallery() {
+            const wrapper = document.getElementById('gallery-wrapper');
+            wrapper.innerHTML = galleryImages.map(img => `
+                <div class="swiper-slide overflow-hidden h-[70vh]">
+                    <img src="${img}" class="w-full h-full object-cover transition-transform duration-[4s] hover:scale-110">
+                </div>
+            `).join('');
+        }
 
-        function openEditModal(id = null) {
-            const modal = document.getElementById('edit-modal');
-            const title = document.getElementById('modal-title');
-            const catSelect = document.getElementById('edit-category');
+        function renderReservations() {
+            const list = document.getElementById('admin-res-list');
+            list.innerHTML = reservationData.length > 0 ? 
+                reservationData.map((res, i) => `
+                    <tr class="hover:bg-white/[0.02]">
+                        <td class="p-6 font-serif text-white">${res.name}</td>
+                        <td class="p-6 text-gray-500">${res.guests}</td>
+                        <td class="p-6 text-gray-600 italic font-mono">${res.date}</td>
+                        <td class="p-6"><button onclick="deleteRes(${i})" class="text-red-500/30 hover:text-red-500">Purge</button></td>
+                    </tr>
+                `).join('') :
+                '<tr><td colspan="4" class="p-20 text-center text-gray-700 italic">No Active Manifests</td></tr>';
             
-            // Populate category dropdown
-            catSelect.innerHTML = categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            document.getElementById('guest-count').innerText = String(reservationData.length).padStart(2, '0');
+        }
 
-            // Clear inputs
-            document.getElementById('edit-id').value = '';
-            document.getElementById('edit-name').value = '';
-            document.getElementById('edit-price').value = '';
-            document.getElementById('edit-desc').value = '';
-            document.getElementById('edit-image').value = '';
-            document.getElementById('edit-category').value = categories[0]?.id || '';
+        // --- NAVIGATION LOGIC ---
+        function initNavigation() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            const navLinks = document.querySelectorAll('.mobile-nav-link');
 
-            if (id) {
-                const item = menuData.find(i => i.id === id);
-                if (item) {
-                    document.getElementById('edit-id').value = item.id;
-                    document.getElementById('edit-name').value = item.name;
-                    document.getElementById('edit-price').value = item.price;
-                    document.getElementById('edit-desc').value = item.desc;
-                    document.getElementById('edit-image').value = item.image;
-                    document.getElementById('edit-category').value = item.category;
-                    title.innerText = "Update Burger Details";
+            // Toggle Menu
+            menuToggle.addEventListener('click', () => {
+                const isActive = mobileMenu.classList.toggle('active');
+                if (isActive) {
+                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>`;
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8h16M4 16h16"></path>`;
+                    document.body.style.overflow = 'auto';
                 }
-            } else {
-                title.innerText = "Add Menu Item";
-            }
-            modal.classList.remove('hidden');
-            lucide.createIcons();
-        }
-
-        function closeEditModal() {
-            document.getElementById('edit-modal').classList.add('hidden');
-        }
-
-        function saveItemData() {
-            const id = document.getElementById('edit-id').value;
-            const name = document.getElementById('edit-name').value;
-            const price = parseFloat(document.getElementById('edit-price').value);
-            const desc = document.getElementById('edit-desc').value;
-            const image = document.getElementById('edit-image').value || "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500";
-            const category = document.getElementById('edit-category').value;
-
-            if (!name || isNaN(price)) {
-                alert("Please provide valid name and price.");
-                return;
-            }
-
-            if (id) {
-                const idx = menuData.findIndex(i => i.id == id);
-                if (idx !== -1) menuData[idx] = { id: Number(id), name, price, desc, image, category };
-            } else {
-                const newId = menuData.length > 0 ? Math.max(...menuData.map(i => i.id)) + 1 : 1;
-                menuData.push({ id: newId, name, price, desc, image, category });
-            }
-
-            saveAndRefresh();
-            closeEditModal();
-        }
-
-        function deleteBurger(id) {
-            if (confirm("Remove this item from the menu permanently?")) {
-                menuData = menuData.filter(i => i.id !== id);
-                saveAndRefresh();
-            }
-        }
-
-        // --- 5. CATEGORY MANAGEMENT ---
-
-        function openCategoryManagement() {
-            const modal = document.getElementById('category-modal');
-            renderCategoryList();
-            modal.classList.remove('hidden');
-            lucide.createIcons();
-        }
-
-        function closeCategoryModal() {
-            document.getElementById('category-modal').classList.add('hidden');
-        }
-
-        function renderCategoryList() {
-            const list = document.getElementById('category-list');
-            list.innerHTML = '';
-            
-            categories.forEach(cat => {
-                const div = document.createElement('div');
-                div.className = "flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 hover:border-brand-gold/30 transition";
-                div.innerHTML = `
-                    <div class="flex flex-col">
-                        <span class="font-bold text-gray-900">${cat.name}</span>
-                        <span class="text-xs text-gray-400 uppercase font-bold tracking-tighter">${cat.id}</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="editCategoryPrompt('${cat.id}')" class="p-2 text-blue-500 hover:bg-blue-100 rounded-lg transition"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                        <button onclick="removeCategory('${cat.id}')" class="p-2 text-red-500 hover:bg-red-100 rounded-lg transition"><i data-lucide="trash" class="w-4 h-4"></i></button>
-                    </div>
-                `;
-                list.appendChild(div);
             });
-            lucide.createIcons();
+
+            // Close on Link Click
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8h16M4 16h16"></path>`;
+                    document.body.style.overflow = 'auto';
+                });
+            });
+
+            // Scroll Styles
+            window.addEventListener('scroll', () => {
+                const nav = document.getElementById('navbar');
+                if(window.scrollY > 50) {
+                    nav.classList.add('bg-midnight/80', 'backdrop-blur-xl', 'py-4', 'border-b', 'border-gold/10');
+                    nav.classList.remove('py-8');
+                } else {
+                    nav.classList.remove('bg-midnight/80', 'backdrop-blur-xl', 'border-b', 'border-gold/10');
+                    nav.classList.add('py-8');
+                }
+            });
         }
 
-        function addCategory() {
-            const nameInput = document.getElementById('new-category-name');
-            const name = nameInput.value.trim();
-            if (!name) return;
-            
-            const id = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
-            
-            if (categories.find(c => c.id === id)) {
-                alert("A category with a similar name already exists.");
-                return;
+        // --- ANIMATIONS ---
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    gsap.to("#loader", { opacity: 0, duration: 1, onComplete: () => {
+                        document.getElementById('loader').style.display = 'none';
+                        startHeroAnimation();
+                    }});
+                }, 1000);
+            });
+
+            function startHeroAnimation() {
+                const tl = gsap.timeline();
+                tl.to("#hero-eyebrow", { opacity: 1, y: -20, duration: 1, startAt: {y: 0} })
+                  .to("#hero-title", { opacity: 1, y: -20, duration: 1.2, startAt: {y: 0} }, "-=0.6")
+                  .to("#hero-text", { opacity: 1, y: -20, duration: 1, startAt: {y: 0} }, "-=0.8")
+                  .to("#hero-actions", { opacity: 1, y: -20, duration: 1, startAt: {y: 0} }, "-=0.8");
             }
 
-            categories.push({ id, name });
-            nameInput.value = '';
-            saveAndRefreshCategories();
-            renderCategoryList();
+            gsap.utils.toArray(".reveal-up").forEach(elem => {
+                gsap.fromTo(elem, { opacity: 0, y: 50 }, {
+                    opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
+                    scrollTrigger: { trigger: elem, start: "top 85%" }
+                });
+            });
         }
 
-        function editCategoryPrompt(id) {
-            const cat = categories.find(c => c.id === id);
-            const newName = prompt("Enter new name for category:", cat.name);
-            if (newName && newName.trim()) {
-                cat.name = newName.trim();
-                saveAndRefreshCategories();
-                renderCategoryList();
-            }
+        // --- HANDLERS ---
+        function handleReservation() {
+            const name = document.getElementById('res-name').value;
+            const guests = document.getElementById('res-guests').value;
+            if(!name || name.length < 2) return;
+            const newRes = { name, guests, date: new Date().toLocaleTimeString() };
+            reservationData.unshift(newRes);
+            localStorage.setItem('orama_reservations', JSON.stringify(reservationData));
+            gsap.to("#res-form", { opacity: 0, duration: 0.5, onComplete: () => {
+                document.getElementById('res-form').classList.add('hidden');
+                document.getElementById('success-msg').classList.remove('hidden');
+            }});
+            renderReservations();
         }
 
-        function removeCategory(id) {
-            // Check if category is used
-            const count = menuData.filter(i => i.category === id).length;
-            if (count > 0) {
-                alert(`Cannot delete. This category has ${count} items assigned to it. Move them first.`);
-                return;
-            }
-            
-            if (confirm("Delete this category?")) {
-                categories = categories.filter(c => c.id !== id);
-                saveAndRefreshCategories();
-                renderCategoryList();
-            }
+        function deleteRes(idx) {
+            reservationData.splice(idx, 1);
+            localStorage.setItem('orama_reservations', JSON.stringify(reservationData));
+            renderReservations();
         }
 
-        // --- GLOBAL REFRESH ---
-        function saveAndRefresh() {
-            localStorage.setItem('pierre_porte_v3_menu', JSON.stringify(menuData));
-            renderAdminTable();
-            renderSiteMenu();
-        }
+        let clickCount = 0;
+        document.getElementById('footer-logo').addEventListener('click', () => {
+            clickCount++;
+            if(clickCount === 3) { clickCount = 0; toggleAdmin(); }
+            setTimeout(() => clickCount = 0, 2000);
+        });
 
-        function saveAndRefreshCategories() {
-            localStorage.setItem('pierre_porte_v3_categories', JSON.stringify(categories));
-            renderAdminTable(); // categories names might have changed
-            renderSiteMenu();
-        }
-
-        // --- NAVIGATION ---
-        function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        }
-
-        function mobileNav(section) {
-            toggleMobileMenu();
-            switchView('home', section);
-        }
-
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (el) window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
-        }
-
-        function switchView(viewName, scrollTarget = null) {
-            const views = ['home', 'admin-login', 'admin-dashboard'];
-            views.forEach(v => document.getElementById('view-' + v).classList.add('hidden'));
-            
-            document.getElementById('view-' + viewName).classList.remove('hidden');
-            
-            if (scrollTarget && viewName === 'home') {
-                setTimeout(() => scrollToSection(scrollTarget), 50);
+        function toggleAdmin() {
+            const panel = document.getElementById('admin-panel');
+            const isHidden = panel.classList.contains('hidden');
+            if(isHidden) {
+                panel.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                gsap.fromTo(panel, { opacity: 0, y: 50 }, { opacity: 1, y: 0 });
             } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                gsap.to(panel, { opacity: 0, y: 50, onComplete: () => {
+                    panel.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                }});
             }
         }
 
-        // Initial Boot
-        document.getElementById('year').textContent = new Date().getFullYear();
-        renderSiteMenu();
-        lucide.createIcons();
+        // Menu Filtering
+        document.querySelectorAll('.menu-filter').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const filter = e.target.dataset.filter;
+                document.querySelectorAll('.menu-filter').forEach(b => {
+                    b.classList.remove('gold-gradient-text');
+                    b.classList.add('text-gray-500');
+                });
+                e.target.classList.add('gold-gradient-text');
+                e.target.classList.remove('text-gray-500');
+                gsap.to(".menu-grid-item", { opacity: 0, scale: 0.9, duration: 0.3, onComplete: () => {
+                    document.querySelectorAll('.menu-grid-item').forEach(item => {
+                        item.style.display = (filter === 'all' || item.dataset.category === filter) ? 'block' : 'none';
+                    });
+                    gsap.to(".menu-grid-item", { opacity: 1, scale: 1, duration: 0.6, stagger: 0.05 });
+                }});
+            });
+        });
 
+        // --- INIT ---
+        renderMenu();
+        renderGallery();
+        renderReservations();
+        initAnimations();
+        initNavigation();
+
+        new Swiper('.mainSwiper', {
+            loop: true,
+            slidesPerView: 1.2,
+            centeredSlides: true,
+            spaceBetween: 20,
+            autoplay: { delay: 5000 },
+            pagination: { el: '.swiper-pagination', clickable: true },
+            navigation: { nextEl: '.swiper-nav-next', prevEl: '.swiper-nav-prev' },
+            breakpoints: { 1024: { slidesPerView: 1.8, spaceBetween: 40 } }
+        });
     </script>
 </body>
 </html>
