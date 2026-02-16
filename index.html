@@ -3,660 +3,799 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORAMA | The Art of Gastronomy</title>
+    <title>ORAMA | Fine Dining & Management</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co.com/v4d97ZPq/logo-black.png"/>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,500;0,600;1,400&family=Montserrat:wght@100;300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
     <style>
         :root {
-            --gold: #d4af37;
-            --gold-light: #f1e5ac;
-            --gold-dark: #996515;
-            --midnight: #050505;
-            --slate: #0f0f10;
+            --gold: #c5a059;
+            --dark: #000000;
+            --cream: #f4f1ea;
+            --admin-bg: #121212;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body.public-view { cursor: none !important; }
+        body.public-view * { cursor: none !important; }
+
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--midnight);
-            color: #e5e5e5;
+            background-color: var(--dark);
+            color: var(--cream);
             font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden;
-            letter-spacing: 0.02em;
+            line-height: 1.6;
+            margin: 0;
         }
 
-        h1, h2, h3, .font-serif { font-family: 'Playfair Display', serif; }
-        .font-cinzel { font-family: 'Cinzel', serif; }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: var(--midnight); }
-        ::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 10px; }
-
-        /* Luxury Styling */
-        .gold-gradient-text {
-            background: linear-gradient(to right, var(--gold-dark), var(--gold-light), var(--gold-dark));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            display: inline-block;
-        }
-
-        .gold-border-glow {
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.05);
-            transition: all 0.5s ease;
-        }
-
-        .gold-border-glow:hover {
-            border-color: var(--gold);
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.15);
-        }
-
-        .hero-video-overlay {
-            background: linear-gradient(to bottom, rgba(5,5,5,0.7) 0%, rgba(5,5,5,0.4) 50%, rgba(5,5,5,1) 100%);
-        }
-
-        .nav-link {
-            position: relative;
-            font-size: 0.7rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            transition: color 0.4s ease;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 1px;
-            bottom: -5px;
-            left: 0;
-            background: var(--gold);
-            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .nav-link:hover::after { width: 100%; }
-        .nav-link:hover { color: var(--gold-light); }
-
-        .btn-gold {
-            background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 1rem 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            font-size: 0.75rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            z-index: 1;
-        }
-
-        .btn-gold:hover { color: var(--midnight); }
-        .btn-gold::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 100%; height: 100%;
-            background: var(--gold);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            z-index: -1;
-        }
-        .btn-gold:hover::before { left: 0; }
-
-        /* Mobile Menu Overlay */
-        #mobile-menu {
-            transform: translateY(-100%);
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            background: rgba(5, 5, 5, 0.98);
-            backdrop-filter: blur(20px);
-        }
-        #mobile-menu.active {
-            transform: translateY(0);
-        }
-
-        /* Swiper Overrides */
-        .swiper-button-next, .swiper-button-prev { color: var(--gold) !important; scale: 0.7; }
-        .swiper-pagination-bullet { background: var(--gold) !important; opacity: 0.3; }
-        .swiper-pagination-bullet-active { opacity: 1; width: 20px; border-radius: 4px; }
-
-        /* Admin UI */
-        #admin-panel {
-            z-index: 9999;
-            background: rgba(5, 5, 5, 0.98);
-            backdrop-filter: blur(20px);
-        }
+        /* --- PUBLIC SITE STYLES --- */
+        .bg-canvas { position: fixed; inset: 0; z-index: -2; background-color: var(--dark); }
+        .bg-grain { position: fixed; inset: 0; z-index: -1; opacity: 0.3; pointer-events: none; background-image: url("https://www.transparenttextures.com/patterns/stardust.png"); }
         
-        .floating-label {
-            position: absolute;
-            pointer-events: none;
-            left: 15px;
-            top: 15px;
-            transition: 0.2s ease all;
-            color: #666;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
+        h1, h2, h3, h4, .serif { font-family: 'Cormorant Garamond', serif; letter-spacing: -0.01em; }
 
-        input:focus ~ .floating-label, input:not(:placeholder-shown) ~ .floating-label {
-            top: -20px;
-            left: 5px;
-            font-size: 0.6rem;
-            color: var(--gold);
-        }
+        .text-gold { color: var(--gold); }
+        .bg-gold { background-color: var(--gold); }
+        
+        #cursor { position: fixed; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; pointer-events: none; z-index: 10001; mix-blend-mode: difference; display: none; }
+        #cursor-follower { position: fixed; width: 40px; height: 40px; border: 1px solid var(--gold); border-radius: 50%; pointer-events: none; z-index: 10000; transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1); display: none; }
+        
+        body.public-view #cursor, body.public-view #cursor-follower { display: block; }
 
-        .menu-grid-item {
+        #progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--gold); z-index: 100; width: 0%; }
+
+        .glass-nav { background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+
+        .menu-card, .gallery-card, .blog-card, .chef-card { position: relative; overflow: hidden; background: #0a0a0a; transition: all 0.6s ease; }
+        .chef-card { border: 1px solid rgba(197, 160, 89, 0.1); }
+        .menu-card img, .gallery-card img, .blog-card img, .chef-card img { transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1); width: 100%; height: 100%; object-fit: cover; }
+        .menu-card:hover img, .gallery-card:hover img, .blog-card:hover img, .chef-card:hover img { transform: scale(1.05); }
+        
+        .tag { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); border: 1px solid rgba(197, 160, 89, 0.3); padding: 4px 12px; border-radius: 100px; display: inline-block; }
+        
+        .food-grid, .blog-grid, .team-grid { display: grid; gap: 2rem; }
+        .food-grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+        .team-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+        .swiper { width: 100%; padding-bottom: 50px !important; }
+        .swiper-slide { width: auto; max-width: 800px; height: 60vh; }
+        .swiper-pagination-bullet { background: var(--gold) !important; opacity: 0.3; }
+        .swiper-pagination-bullet-active { opacity: 1; }
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            z-index: 10002;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        #loader-img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            margin-bottom: 24px;
             opacity: 0;
-            transform: translateY(30px);
+            transform: scale(0.85);
+            filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.1));
         }
+
+        /* --- ADMIN CONSOLE STYLES --- */
+        #admin-console { display: none; background: var(--admin-bg); min-height: 100vh; color: #ccc; }
+        .admin-sidebar { background: #000; border-right: 1px solid #333; }
+        .admin-btn { transition: all 0.2s; border-radius: 4px; border: none; outline: none; text-align: left; cursor: pointer; color: #888; }
+        .admin-btn:hover { background: #222; color: var(--gold); }
+        .admin-btn.active { background: var(--gold) !important; color: #000 !important; }
+        
+        .input-group input, .input-group textarea, .input-group select {
+            background: #1e1e1e; border: 1px solid #333; color: white; padding: 10px; width: 100%; border-radius: 4px; font-size: 13px; outline: none;
+        }
+        .input-group input:focus, .input-group textarea:focus { border-color: var(--gold); }
+        .input-group label { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; color: #888; font-weight: 600; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .admin-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 8px; }
+        .btn-action { font-size: 9px; font-weight: bold; letter-spacing: 1px; padding: 8px 16px; border-radius: 4px; text-transform: uppercase; transition: all 0.2s; cursor: pointer; }
+        .btn-action:hover { opacity: 0.8; transform: translateY(-1px); }
     </style>
 </head>
-<body class="antialiased">
+<body id="top" class="public-view">
 
     <!-- Preloader -->
-    <div id="loader" class="fixed inset-0 bg-midnight z-[100] flex items-center justify-center">
-        <div class="text-center">
-            <div class="font-cinzel text-2xl tracking-[0.5em] gold-gradient-text animate-pulse">ORAMA</div>
-            <div class="mt-4 h-px w-24 bg-gold/20 mx-auto relative overflow-hidden">
-                <div class="absolute inset-0 bg-gold animate-[loading_2s_infinite]"></div>
-            </div>
+    <div id="loader">
+        <img src="https://i.ibb.co.com/v4d97ZPq/logo-black.png" alt="Orama Emblem" id="loader-img">
+        <div id="loader-text-container" class="opacity-0">
+            <h2 class="text-gold text-4xl serif tracking-[0.6em] mb-2 uppercase">ORAMA Essence</h2>
+            <p class="text-gold/60 text-[11px] tracking-[0.8em] font-light uppercase">BY EYWA</p>
         </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-50 px-6 py-8 transition-all duration-700" id="navbar">
-        <div class="max-w-screen-2xl mx-auto flex justify-between items-center">
-            <a href="#home" class="text-2xl md:text-3xl font-cinzel tracking-[0.4em] gold-gradient-text">ORAMA</a>
-            
-            <!-- Desktop Links -->
-            <div class="hidden lg:flex space-x-12">
-                <a href="#home" class="nav-link">Essence</a>
-                <a href="#about" class="nav-link">Heritage</a>
-                <a href="#menu" class="nav-link">Curation</a>
-                <a href="#gallery" class="nav-link">Vision</a>
-                <a href="#reservation" class="nav-link">Sanctuary</a>
+    <!-- PUBLIC SITE -->
+    <div id="site-wrapper">
+        <div class="bg-canvas"></div>
+        <div class="bg-grain"></div>
+        <div id="progress-bar"></div>
+        <div id="cursor"></div>
+        <div id="cursor-follower"></div>
+
+        <nav class="fixed w-full z-50 glass-nav border-b border-white/5 py-3 px-6 md:px-12 flex justify-between items-center opacity-0" id="main-nav">
+            <a href="#top" class="nav-logo-container flex items-center space-x-4" id="nav-logo">
+                <img src="https://i.ibb.co.com/v4d97ZPq/logo-black.png" alt="ORAMA" class="nav-logo-img h-10">
+                <span class="text-xl font-light tracking-[0.3em] text-gold serif hidden sm:block">ORAMA</span>
+            </a>
+            <div class="hidden lg:flex space-x-12 text-[10px] uppercase tracking-[0.3em] font-light">
+                <a href="#top" class="hover:text-gold transition-colors">Home</a>
+                <a href="#about" class="hover:text-gold transition-colors">About</a>
+                <a href="#menu" class="hover:text-gold transition-colors">Cuisine</a>
+                <a href="#team" class="hover:text-gold transition-colors">Team</a>
+                <a href="#gallery" class="hover:text-gold transition-colors">Atmosphere</a>
+                <a href="#journal" class="hover:text-gold transition-colors">Journal</a>
+                <a href="#booking" class="hover:text-gold transition-colors">Reservations</a>
             </div>
-            
-            <div class="flex items-center gap-6">
-                <a href="#reservation" class="hidden sm:block text-[10px] tracking-[0.3em] uppercase border border-gold/30 px-6 py-2 hover:bg-gold hover:text-midnight transition-all">Reserve</a>
-                <button id="menu-toggle" class="lg:hidden text-gold focus:outline-none">
-                    <svg id="menu-icon" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8h16M4 16h16"></path>
-                    </svg>
-                </button>
+            <a href="#booking" class="bg-gold/10 border border-gold/50 text-gold px-8 py-2 text-[10px] uppercase tracking-widest hover:bg-gold hover:text-white transition-all">
+                Book a Table
+            </a>
+        </nav>
+
+        <!-- Hero -->
+        <section class="relative h-screen flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 z-0 overflow-hidden" id="hero-img-container" style="clip-path: inset(100% 0% 0% 0%);">
+                <img src="" class="w-full h-full object-cover scale-125" id="hero-img-bg">
+                <div class="absolute inset-0 bg-black/50"></div>
             </div>
-        </div>
-    </nav>
-
-    <!-- Mobile Menu Overlay -->
-    <div id="mobile-menu" class="fixed inset-0 z-[49] flex flex-col items-center justify-center space-y-10 lg:hidden">
-        <a href="#home" class="mobile-nav-link text-xl tracking-[0.4em] uppercase font-cinzel text-gold">Essence</a>
-        <a href="#about" class="mobile-nav-link text-xl tracking-[0.4em] uppercase font-cinzel">Heritage</a>
-        <a href="#menu" class="mobile-nav-link text-xl tracking-[0.4em] uppercase font-cinzel">Curation</a>
-        <a href="#gallery" class="mobile-nav-link text-xl tracking-[0.4em] uppercase font-cinzel">Vision</a>
-        <a href="#reservation" class="mobile-nav-link text-xl tracking-[0.4em] uppercase font-cinzel">Sanctuary</a>
-    </div>
-
-    <!-- Hero Section -->
-    <section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 z-0">
-            <img src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=90&w=2400" class="w-full h-full object-cover scale-110" id="hero-bg">
-            <div class="absolute inset-0 hero-video-overlay"></div>
-        </div>
-        
-        <div class="relative z-10 text-center px-4 max-w-5xl">
-            <div id="hero-eyebrow" class="text-[10px] uppercase tracking-[1em] text-gold mb-8 opacity-0">London • Tokyo • New York</div>
-            <h1 id="hero-title" class="text-6xl md:text-9xl font-serif leading-tight mb-8 opacity-0">
-                Culinary <br><span class="italic gold-gradient-text">Transcendence</span>
-            </h1>
-            <p id="hero-text" class="text-gray-400 text-sm md:text-base max-w-2xl mx-auto mb-12 tracking-wide leading-relaxed font-light opacity-0">
-                A sanctuary where the elements of nature converge with the precision of art. Discover a symphony of flavors curated for the most discerning palates.
-            </p>
-            <div id="hero-actions" class="flex flex-col sm:flex-row items-center justify-center gap-6 opacity-0">
-                <a href="#reservation" class="btn-gold">Private Selection</a>
-                <a href="#menu" class="text-[10px] uppercase tracking-[0.4em] text-white hover:text-gold transition-colors border-b border-white/20 pb-1">Explore Menu</a>
+            <div class="relative z-10 text-center px-4">
+                <div class="overflow-hidden mb-6"><h4 class="text-gold uppercase tracking-[0.8em] text-[10px] translate-y-full" id="hero-sub-text"></h4></div>
+                <div class="overflow-hidden mb-6"><h1 class="text-7xl md:text-[10rem] font-extralight leading-none translate-y-full" id="hero-title-text"></h1></div>
+                <div class="overflow-hidden"><p class="max-w-2xl mx-auto text-[10px] md:text-xs text-gray-300 font-light tracking-[0.4em] uppercase translate-y-full" id="hero-tagline-text"></p></div>
             </div>
-        </div>
+        </section>
 
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
-            <div class="w-px h-12 bg-gradient-to-b from-gold/0 to-gold"></div>
-        </div>
-    </section>
-
-    <!-- Heritage Section -->
-    <section id="about" class="py-32 px-8 bg-slate relative">
-        <div class="max-w-screen-xl mx-auto">
-            <div class="grid lg:grid-cols-2 gap-20 items-center">
-                <div class="reveal-up">
-                    <span class="text-[10px] uppercase tracking-[0.5em] text-gold mb-4 block font-semibold">The Orama Philosophy</span>
-                    <h2 class="text-5xl md:text-6xl font-serif mb-8 leading-tight">Mastery in <br><span class="italic">Every Nuance</span></h2>
-                    <p class="text-gray-400 leading-loose mb-10 font-light">
-                        At Orama, we believe that dining is not merely the consumption of food, but a profound cultural exchange. Our philosophy is rooted in "Orama" — the ancient Greek vision of seeing beyond the physical form to the spirit within.
-                    </p>
-                    <div class="grid grid-cols-2 gap-12 py-10 border-y border-white/5">
-                        <div>
-                            <span class="text-3xl font-serif gold-gradient-text mb-2 block">120+</span>
-                            <span class="text-[9px] uppercase tracking-widest text-gray-500">Rare Vintages</span>
-                        </div>
-                        <div>
-                            <span class="text-3xl font-serif gold-gradient-text mb-2 block">Michelin</span>
-                            <span class="text-[9px] uppercase tracking-widest text-gray-500">Service Standards</span>
-                        </div>
-                    </div>
+        <!-- Heritage Section -->
+        <section id="about" class="py-32 px-6">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-24 items-center">
+                <div class="reveal">
+                    <div class="tag mb-6" id="about-tag"></div>
+                    <h2 class="text-5xl md:text-7xl serif mb-10 leading-tight" id="about-title-text"></h2>
+                    <p class="text-gray-400 font-light leading-relaxed mb-8 text-lg" id="about-desc-text"></p>
                 </div>
-                <div class="relative reveal-up">
-                    <div class="gold-border-glow p-4">
-                        <img src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1200" class="w-full h-[600px] object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-1000">
-                    </div>
-                    <div class="absolute -bottom-10 -left-10 bg-midnight p-10 border border-white/5 shadow-2xl hidden md:block">
-                        <p class="font-cinzel text-gold tracking-widest text-xs mb-2">FOUNDED MMXXVI</p>
-                        <p class="text-[9px] text-gray-500 uppercase tracking-tighter">Excellence as a Legacy</p>
-                    </div>
+                <div class="reveal overflow-hidden">
+                    <img src="" id="about-img" class="w-full grayscale hover:grayscale-0 transition-all duration-1000 shadow-2xl scale-110">
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Menu Section -->
-    <section id="menu" class="py-32 px-8 bg-midnight">
-        <div class="max-w-screen-xl mx-auto">
-            <div class="text-center mb-24 reveal-up">
-                <h2 class="text-[10px] uppercase tracking-[0.6em] text-gold mb-6">The Selection</h2>
-                <h3 class="text-5xl md:text-7xl font-serif mb-12">Epicurean Journey</h3>
-                
-                <div class="flex flex-wrap justify-center gap-8 md:gap-16 text-[10px] uppercase tracking-[0.4em] font-medium border-b border-white/5 pb-8">
-                    <button class="menu-filter gold-gradient-text" data-filter="all">All Courses</button>
-                    <button class="menu-filter text-gray-500 hover:text-white transition" data-filter="starter">Premier</button>
-                    <button class="menu-filter text-gray-500 hover:text-white transition" data-filter="main">Signature</button>
-                    <button class="menu-filter text-gray-500 hover:text-white transition" data-filter="dessert">Finale</button>
+        <!-- Team Section -->
+        <section id="team" class="py-32 px-6">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-24 text-center reveal">
+                    <div class="tag mb-6">Master Craftsmen</div>
+                    <h2 class="text-5xl md:text-7xl serif">The Culinary Team</h2>
                 </div>
+                <div class="team-grid" id="public-team-grid"></div>
             </div>
+        </section>
 
-            <div id="menu-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-20">
-                <!-- Dynamic Items -->
+        <!-- Menu Section -->
+        <section id="menu" class="py-32 px-6 bg-white/[0.02]">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-24 text-center reveal">
+                    <div class="tag mb-6">Signature Selection</div>
+                    <h2 class="text-5xl md:text-7xl serif">The Seasonal Menu</h2>
+                </div>
+                <div class="food-grid" id="public-menu-grid"></div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Gallery Section -->
-    <section id="gallery" class="py-32 bg-slate overflow-hidden">
-        <div class="max-w-screen-2xl mx-auto px-8 mb-20 flex justify-between items-end reveal-up">
-            <div>
-                <h2 class="text-[10px] uppercase tracking-[0.6em] text-gold mb-4">Atmosphere</h2>
-                <h3 class="text-4xl md:text-6xl font-serif italic">The Visual Echo</h3>
-            </div>
-            <div class="hidden md:flex gap-4">
-                <div class="swiper-nav-prev cursor-pointer hover:text-gold transition"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 19l-7-7 7-7"></path></svg></div>
-                <div class="swiper-nav-next cursor-pointer hover:text-gold transition"><svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 5l7 7-7 7"></path></svg></div>
-            </div>
-        </div>
-
-        <div class="swiper mainSwiper reveal-up">
-            <div class="swiper-wrapper" id="gallery-wrapper">
-                <!-- Dynamic Slides -->
-            </div>
-            <div class="swiper-pagination !bottom-10"></div>
-        </div>
-    </section>
-
-    <!-- Reservation -->
-    <section id="reservation" class="py-40 bg-midnight relative">
-        <div class="absolute inset-0 opacity-10">
-            <div class="absolute inset-0" style="background-image: radial-gradient(var(--gold) 0.5px, transparent 0.5px); background-size: 30px 30px;"></div>
-        </div>
-        
-        <div class="max-w-4xl mx-auto px-8 relative z-10">
-            <div class="gold-border-glow bg-slate/50 backdrop-blur-3xl p-10 md:p-20 text-center">
-                <h2 class="text-[10px] uppercase tracking-[0.7em] text-gold mb-8">Reservations</h2>
-                <h3 class="text-5xl font-serif mb-12">Request an Audience</h3>
-                
-                <form id="res-form" class="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
-                    <div class="relative">
-                        <input type="text" id="res-name" placeholder=" " class="w-full bg-transparent border-b border-white/20 py-4 focus:outline-none focus:border-gold transition-all">
-                        <label class="floating-label">Guest Identity</label>
+        <!-- Reservation Section -->
+        <section id="booking" class="py-32 px-6">
+            <div class="max-w-3xl mx-auto text-center">
+                <div class="tag mb-6">Experience</div>
+                <h2 class="text-5xl md:text-7xl serif mb-12">Reservations</h2>
+                <form id="public-booking-form" onsubmit="handlePublicBooking(event)" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="input-group"><label>Name</label><input type="text" id="res-name" required></div>
+                        <div class="input-group"><label>Email</label><input type="email" id="res-email" required></div>
                     </div>
-                    <div class="relative">
-                        <select id="res-guests" class="w-full bg-transparent border-b border-white/20 py-4 focus:outline-none focus:border-gold transition-all appearance-none cursor-pointer">
-                            <option value="2" class="bg-midnight">Party of Two</option>
-                            <option value="4" class="bg-midnight">Party of Four</option>
-                            <option value="6" class="bg-midnight">Party of Six</option>
-                            <option value="private" class="bg-midnight">Private Chambers</option>
-                        </select>
-                        <label class="floating-label">Magnitude</label>
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="input-group"><label>Date</label><input type="date" id="res-date" required></div>
+                        <div class="input-group"><label>Time</label><input type="time" id="res-time" required></div>
+                        <div class="input-group"><label>Guests</label><input type="number" id="res-guests" min="1" max="10" required></div>
                     </div>
-                    <div class="md:col-span-2 text-center pt-8">
-                        <button type="button" onclick="handleReservation()" class="btn-gold w-full md:w-auto px-20">Inquire Availability</button>
-                    </div>
+                    <button type="submit" class="w-full bg-gold text-dark py-6 font-bold tracking-[0.3em] text-[10px] uppercase hover:bg-white transition-all">Request Table</button>
+                    <p id="booking-msg" class="hidden text-gold text-xs tracking-widest uppercase mt-4">Thank you. Our concierge will contact you shortly.</p>
                 </form>
-
-                <div id="success-msg" class="hidden py-10 animate-fade-in">
-                    <div class="text-gold text-5xl mb-6">✧</div>
-                    <h4 class="font-serif text-2xl mb-4">Inquiry Received</h4>
-                    <p class="text-gray-500 text-sm tracking-widest uppercase">Our Maître d’ will contact you shortly.</p>
-                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer class="bg-midnight pt-32 pb-12 border-t border-white/5 px-8">
-        <div class="max-w-screen-2xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-20 mb-32">
-                <div class="col-span-1 md:col-span-1">
-                    <div id="footer-logo" class="text-3xl font-cinzel tracking-[0.5em] gold-gradient-text mb-10 cursor-pointer select-none">ORAMA</div>
-                    <p class="text-gray-500 text-xs tracking-widest leading-loose uppercase">Where culinary mastery meets the ethereal. Established to redefine the standards of global hospitality.</p>
-                </div>
-                <div>
-                    <h4 class="text-[10px] uppercase tracking-[0.4em] text-gold mb-10 font-bold">Discover</h4>
-                    <ul class="space-y-6 text-[10px] uppercase tracking-[0.2em] text-gray-400">
-                        <li><a href="#home" class="hover:text-gold transition">The Essence</a></li>
-                        <li><a href="#menu" class="hover:text-gold transition">The Curation</a></li>
-                        <li><a href="#gallery" class="hover:text-gold transition">The Vision</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-[10px] uppercase tracking-[0.4em] text-gold mb-10 font-bold">Location</h4>
-                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 leading-relaxed">
-                        122 Lexington Avenue<br>
-                        Manhattan, NY 10016<br>
-                        +1 (212) 555-0198
-                    </p>
-                </div>
-                <div>
-                    <h4 class="text-[10px] uppercase tracking-[0.4em] text-gold mb-10 font-bold">Vigilance</h4>
-                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400">Monday — Sunday</p>
-                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-500 italic mt-2">18:00 — 23:00</p>
-                </div>
+        <!-- Gallery Section -->
+        <section id="gallery" class="py-32 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-6 mb-16 text-center reveal">
+                <div class="tag mb-6">The Atmosphere</div>
+                <h2 class="text-5xl md:text-7xl serif">Visual Poetry</h2>
             </div>
             
-            <div class="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-[8px] tracking-[0.5em] text-gray-600 uppercase">
-                <p>&copy; 2026 ORAMA GROUP • ALL RIGHTS RESERVED</p>
-                <div class="flex gap-8 mt-6 md:mt-0">
-                    <a href="#" class="hover:text-gold transition">Privacy</a>
-                    <a href="#" class="hover:text-gold transition">Terms</a>
-                    <a href="#" class="hover:text-gold transition">Carbon Offset</a>
+            <div class="swiper atmosphereSwiper reveal">
+                <div class="swiper-wrapper" id="public-gallery-grid">
                 </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </section>
+
+        <!-- Journal Section -->
+        <section id="journal" class="py-32 px-6 bg-white/[0.02]">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-24 text-center reveal">
+                    <div class="tag mb-6">Culinary Stories</div>
+                    <h2 class="text-5xl md:text-7xl serif">The Journal</h2>
+                </div>
+                <div class="blog-grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3" id="public-blog-grid"></div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="pt-32 pb-12 px-6 md:px-24 border-t border-white/5 bg-black">
+            <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-16 mb-24 uppercase tracking-[0.2em] text-[10px]">
+                <div>
+                    <h5 class="text-gold mb-6">Contact</h5>
+                    <p class="mb-2" id="footer-address"></p>
+                    <p class="mb-2" id="footer-phone"></p>
+                    <p id="footer-email"></p>
+                </div>
+                <div>
+                    <h5 class="text-gold mb-6">Hours</h5>
+                    <p class="mb-2" id="footer-hours-week"></p>
+                    <p id="footer-hours-weekend"></p>
+                </div>
+                <div>
+                    <h5 class="text-gold mb-6">Social</h5>
+                    <div class="flex space-x-6">
+                        <a href="#" class="hover:text-gold transition-colors">Instagram</a>
+                        <a href="#" class="hover:text-gold transition-colors">Twitter</a>
+                    </div>
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-[9px] text-gray-700 uppercase tracking-[0.5em]">
+                <div>&copy; 2026 ORAMA GROUP</div>
+                <button onclick="toggleView('admin-auth')" class="text-gold hover:text-white transition-colors cursor-pointer">ADMIN ACCESS</button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ADMIN AUTH -->
+    <div id="admin-auth" class="fixed inset-0 z-[100] bg-black hidden flex items-center justify-center p-6">
+        <div class="w-full max-w-md space-y-8">
+            <div class="text-center">
+                <h2 class="serif text-gold text-4xl mb-2">Internal Access</h2>
+                <p class="text-[9px] tracking-widest text-gray-500 uppercase">Authorized Personnel Only</p>
+            </div>
+            <div class="space-y-4">
+                <div class="input-group">
+                    <label>Passcode</label>
+                    <input type="password" id="admin-pass" placeholder="Enter PIN" value="1234">
+                </div>
+                <button onclick="checkAuth()" class="w-full bg-gold text-dark py-4 text-xs font-bold tracking-widest hover:bg-white transition-all">SIGN IN</button>
+                <button onclick="toggleView('site-wrapper')" class="w-full text-[9px] text-gray-500 uppercase tracking-widest">Cancel</button>
             </div>
         </div>
-    </footer>
+    </div>
 
-    <!-- Admin Panel (Concierge) -->
-    <div id="admin-panel" class="fixed inset-0 hidden overflow-y-auto px-8 py-20">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex justify-between items-end border-b border-gold/20 pb-10 mb-20">
-                <div>
-                    <h2 class="text-4xl font-serif gold-gradient-text mb-2">Concierge Console</h2>
-                    <p class="text-[9px] tracking-[0.4em] uppercase text-gray-600">Secure Management Interface</p>
+    <!-- ADMIN CONSOLE -->
+    <div id="admin-console" class="flex overflow-hidden">
+        <!-- Sidebar -->
+        <div class="w-64 admin-sidebar h-screen sticky top-0 flex flex-col p-6">
+            <h3 class="serif text-gold text-2xl mb-8">ORAMA CMS</h3>
+            <nav class="flex-grow space-y-2">
+                <button class="admin-btn active w-full p-3 text-[10px] tracking-widest uppercase" onclick="showTab('dashboard', this)">Dashboard</button>
+                <button class="admin-btn w-full p-3 text-[10px] tracking-widest uppercase" onclick="showTab('res-mgr', this)">Reservations</button>
+                <button class="admin-btn w-full p-3 text-[10px] tracking-widest uppercase" onclick="showTab('team-mgr', this)">Culinary Team</button>
+                <button class="admin-btn w-full p-3 text-[10px] tracking-widest uppercase" onclick="showTab('blog-mgr', this)">Journal / Blog</button>
+                <button class="admin-btn w-full p-3 text-[10px] tracking-widest uppercase" onclick="showTab('menu-mgr', this)">Menu Items</button>
+                <button class="admin-btn w-full p-3 text-[10px] tracking-widest uppercase" onclick="showTab('gallery-mgr', this)">Gallery</button>
+                <button class="admin-btn w-full p-3 text-[10px] tracking-widest uppercase" onclick="showTab('site-content', this)">Page Content</button>
+            </nav>
+            <button onclick="logout()" class="mt-auto text-[10px] text-red-500 uppercase tracking-widest font-bold hover:text-red-400">Exit Console</button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="flex-grow p-12 overflow-y-auto h-screen bg-[#080808]">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active space-y-8">
+                <h2 class="serif text-white text-5xl">Overview</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="admin-card">
+                        <p class="text-[10px] uppercase text-gray-500 mb-2 font-bold tracking-widest">Pending Bookings</p>
+                        <h4 class="text-4xl serif text-white" id="stat-pending">0</h4>
+                    </div>
+                    <div class="admin-card">
+                        <p class="text-[10px] uppercase text-gray-500 mb-2 font-bold tracking-widest">Menu Items</p>
+                        <h4 class="text-4xl serif text-white" id="stat-menu">0</h4>
+                    </div>
+                    <div class="admin-card">
+                        <p class="text-[10px] uppercase text-gray-500 mb-2 font-bold tracking-widest">Team Count</p>
+                        <h4 class="text-4xl serif text-white" id="stat-team">0</h4>
+                    </div>
+                    <div class="admin-card">
+                        <p class="text-[10px] uppercase text-gray-500 mb-2 font-bold tracking-widest">Articles</p>
+                        <h4 class="text-4xl serif text-white" id="stat-blog">0</h4>
+                    </div>
                 </div>
-                <button onclick="toggleAdmin()" class="text-[10px] tracking-[0.3em] uppercase border border-white/10 px-8 py-3 hover:bg-white hover:text-midnight transition-all">Close Console</button>
             </div>
 
-            <div class="grid lg:grid-cols-3 gap-12">
-                <!-- Reservation Manifest -->
-                <div class="lg:col-span-2">
-                    <h3 class="text-[10px] tracking-[0.4em] uppercase text-gold mb-10">Guest Manifest</h3>
-                    <div class="bg-slate border border-white/5 rounded-sm overflow-hidden">
-                        <table class="w-full text-left text-[9px] uppercase tracking-widest">
-                            <thead class="bg-white/5 text-gray-500">
-                                <tr>
-                                    <th class="p-6">Client</th>
-                                    <th class="p-6">Party</th>
-                                    <th class="p-6">Time</th>
-                                    <th class="p-6">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-res-list" class="divide-y divide-white/5">
-                                <!-- Dynamic -->
-                            </tbody>
-                        </table>
+            <!-- Reservation Manager -->
+            <div id="res-mgr" class="tab-content space-y-8">
+                <div class="flex justify-between items-end">
+                    <h2 class="serif text-white text-5xl">Reservations</h2>
+                    <p class="text-[10px] text-gray-500 uppercase">Live Queue</p>
+                </div>
+                <div id="res-list" class="space-y-4"></div>
+            </div>
+
+            <!-- Culinary Team Manager -->
+            <div id="team-mgr" class="tab-content space-y-8">
+                <div class="flex justify-between items-center">
+                    <h2 class="serif text-white text-5xl">Culinary Team</h2>
+                    <button onclick="addTeamMember()" class="btn-action bg-gold text-black">Add New Member</button>
+                </div>
+                <div id="team-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            </div>
+
+            <!-- Journal Manager -->
+            <div id="blog-mgr" class="tab-content space-y-8">
+                <div class="flex justify-between items-center">
+                    <h2 class="serif text-white text-5xl">Journal</h2>
+                    <button onclick="addBlogPost()" class="btn-action bg-gold text-black">New Post</button>
+                </div>
+                <div id="blog-list" class="space-y-6"></div>
+            </div>
+
+            <!-- Menu Manager -->
+            <div id="menu-mgr" class="tab-content space-y-8">
+                <div class="flex justify-between items-center">
+                    <h2 class="serif text-white text-5xl">Menu</h2>
+                    <button onclick="addMenuItem()" class="btn-action bg-gold text-black">Add Dish</button>
+                </div>
+                <div id="menu-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- Gallery Manager -->
+            <div id="gallery-mgr" class="tab-content space-y-8">
+                <div class="flex justify-between items-center">
+                    <h2 class="serif text-white text-5xl">Gallery</h2>
+                    <button onclick="addGalleryImage()" class="btn-action bg-gold text-black">Add Image</button>
+                </div>
+                <div id="gallery-list" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+            </div>
+
+            <!-- Page Content Global Settings -->
+            <div id="site-content" class="tab-content space-y-8">
+                <h2 class="serif text-white text-5xl">Global Content</h2>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="admin-card space-y-4">
+                        <h5 class="text-xs text-gold uppercase tracking-widest mb-4">Hero Section</h5>
+                        <div class="input-group"><label>Title</label><input type="text" id="edit-hero-title"></div>
+                        <div class="input-group"><label>Subtext</label><input type="text" id="edit-hero-sub"></div>
+                        <div class="input-group"><label>Tagline</label><input type="text" id="edit-hero-tagline"></div>
+                        <div class="input-group"><label>Hero Image URL</label><input type="text" id="edit-hero-img"></div>
+                    </div>
+                    <div class="admin-card space-y-4">
+                        <h5 class="text-xs text-gold uppercase tracking-widest mb-4">About Section</h5>
+                        <div class="input-group"><label>Section Tag</label><input type="text" id="edit-about-tag"></div>
+                        <div class="input-group"><label>Title</label><input type="text" id="edit-about-title"></div>
+                        <div class="input-group"><label>Description</label><textarea id="edit-about-desc" rows="4"></textarea></div>
+                        <div class="input-group"><label>About Image URL</label><input type="text" id="edit-about-img"></div>
+                    </div>
+                    <div class="admin-card space-y-4">
+                        <h5 class="text-xs text-gold uppercase tracking-widest mb-4">Contact Info</h5>
+                        <div class="input-group"><label>Address</label><input type="text" id="edit-contact-address"></div>
+                        <div class="input-group"><label>Phone</label><input type="text" id="edit-contact-phone"></div>
+                        <div class="input-group"><label>Email</label><input type="text" id="edit-contact-email"></div>
                     </div>
                 </div>
-
-                <!-- Quick Actions -->
-                <div>
-                    <h3 class="text-[10px] tracking-[0.4em] uppercase text-gold mb-10">System Status</h3>
-                    <div class="space-y-6">
-                        <div class="bg-slate p-8 border border-white/5 rounded-sm">
-                            <p class="text-[8px] text-gray-500 mb-2">DATABASE INTEGRITY</p>
-                            <p class="text-xs text-green-500">Synchronized • 100%</p>
-                        </div>
-                        <div class="bg-slate p-8 border border-white/5 rounded-sm">
-                            <p class="text-[8px] text-gray-500 mb-2">ACTIVE SESSIONS</p>
-                            <p id="guest-count" class="text-xl font-serif">04</p>
-                        </div>
-                        <button onclick="localStorage.clear(); location.reload();" class="w-full text-[9px] tracking-[0.3em] uppercase text-red-500/50 hover:text-red-500 transition py-4 border border-red-500/10">Factory Reset Cache</button>
-                    </div>
+                <div class="flex justify-end sticky bottom-0 py-4 bg-[#080808]">
+                    <button onclick="saveGlobalContent()" class="bg-white text-black btn-action px-12 py-4">Apply All Page Changes</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <script>
-        // --- DATA & PERSISTENCE ---
-        const DEFAULT_MENU = [
-            { id: 1, name: 'Obsidian Caviar', price: '£140', category: 'starter', desc: 'Beluga pearls, gold-dusted blinis, chive-infused crème fraîche.', img: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&q=80&w=800' },
-            { id: 2, name: 'Saffron Risotto', price: '£65', category: 'starter', desc: 'Acquerello rice, Persian saffron, bone marrow reduction.', img: 'https://images.unsplash.com/photo-1546039907-7fa05f864c02?auto=format&fit=crop&q=80&w=800' },
-            { id: 3, name: 'A5 Wagyu Strip', price: '£185', category: 'main', desc: 'Miyazaki beef, charcoal-fired, aged soy emulsion, wasabi root.', img: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&q=80&w=800' },
-            { id: 4, name: 'Iberico Pluma', price: '£95', category: 'main', desc: 'Acorn-fed pork, smoked pimentón, fermented garlic, apple cider jus.', img: 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?auto=format&fit=crop&q=80&w=800' },
-            { id: 5, name: 'Sea Urchin Pasta', price: '£110', category: 'main', desc: 'Hand-cut tagliolini, Hokkaido uni, bronze-fennel, lemon zest.', img: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&q=80&w=800' },
-            { id: 6, name: 'Velvet Noir', price: '£45', category: 'dessert', desc: '75% Guanaja chocolate, edible silver, truffle-honey core.', img: 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=800' }
-        ];
+    <!-- Firebase SDK Integration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, doc, deleteDoc, updateDoc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        let menuData = JSON.parse(localStorage.getItem('orama_menu')) || DEFAULT_MENU;
-        let reservationData = JSON.parse(localStorage.getItem('orama_reservations')) || [];
-        let galleryImages = [
-            'https://images.unsplash.com/photo-1550966842-286e58249217?auto=format&fit=crop&q=80&w=1600',
-            'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&q=80&w=1600',
-            'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=1600',
-            'https://images.unsplash.com/photo-1543007630-9710e4a00a20?auto=format&fit=crop&q=80&w=1600'
-        ];
+        // Configuration
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'orama-restaurant-v2';
 
-        // --- CORE UI RENDERING ---
-        function renderMenu() {
-            const container = document.getElementById('menu-container');
-            container.innerHTML = menuData.map(item => `
-                <div class="menu-grid-item group" data-category="${item.category}">
-                    <div class="relative overflow-hidden mb-8 aspect-[4/5] gold-border-glow">
-                        <img src="${item.img}" class="w-full h-full object-cover transition-transform duration-[2s] ease-out group-hover:scale-110">
-                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all"></div>
-                        <div class="absolute top-6 right-6 text-[10px] tracking-[0.2em] uppercase bg-midnight/80 px-4 py-2 text-gold">
-                            ${item.price}
-                        </div>
-                    </div>
-                    <div class="text-center md:text-left">
-                        <h4 class="font-serif text-2xl mb-3 tracking-wide">${item.name}</h4>
-                        <p class="text-[10px] uppercase tracking-[0.3em] text-gold/60 mb-4">${item.category}</p>
-                        <p class="text-gray-500 text-xs leading-relaxed font-light mb-6 px-4 md:px-0">${item.desc}</p>
-                        <div class="h-px w-8 bg-gold/30 mx-auto md:mx-0"></div>
-                    </div>
-                </div>
-            `).join('');
+        let user = null;
+        let siteData = {
+            hero: { title: "ORAMA", sub: "Rome | Est. 1994", tagline: "A Dialog Between Earth and Art", img: "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&q=80&w=2000" },
+            about: { tag: "Our Heritage", title: "Three Decades of Culinary Excellence", desc: "ORAMA has redefined the Roman dining landscape by blending centuries-old traditions with avant-garde scientific precision.", img: "https://images.unsplash.com/photo-1550966841-3ee2069b057d?auto=format&fit=crop&q=80&w=1200" },
+            contact: { address: "Via del Corso 12, Rome, Italy", phone: "+39 06 123 4567", email: "concierge@orama.it", hoursWeek: "Mon - Fri: 18:30 - 23:30", hoursWeekend: "Sat - Sun: 12:00 - 00:00" },
+            team: [],
+            menu: [],
+            gallery: [],
+            blog: [],
+            reservations: []
+        };
 
-            gsap.to(".menu-grid-item", {
-                opacity: 1, y: 0, stagger: 0.1, duration: 1, ease: "power3.out",
-                scrollTrigger: { trigger: "#menu-container", start: "top 80%" }
-            });
-        }
+        // --- AUTH FLOW ---
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
 
-        function renderGallery() {
-            const wrapper = document.getElementById('gallery-wrapper');
-            wrapper.innerHTML = galleryImages.map(img => `
-                <div class="swiper-slide overflow-hidden h-[70vh]">
-                    <img src="${img}" class="w-full h-full object-cover transition-transform duration-[4s] hover:scale-110">
-                </div>
-            `).join('');
-        }
+        onAuthStateChanged(auth, (u) => {
+            user = u;
+            if (u) setupRealtimeListeners();
+        });
 
-        function renderReservations() {
-            const list = document.getElementById('admin-res-list');
-            list.innerHTML = reservationData.length > 0 ? 
-                reservationData.map((res, i) => `
-                    <tr class="hover:bg-white/[0.02]">
-                        <td class="p-6 font-serif text-white">${res.name}</td>
-                        <td class="p-6 text-gray-500">${res.guests}</td>
-                        <td class="p-6 text-gray-600 italic font-mono">${res.date}</td>
-                        <td class="p-6"><button onclick="deleteRes(${i})" class="text-red-500/30 hover:text-red-500">Purge</button></td>
-                    </tr>
-                `).join('') :
-                '<tr><td colspan="4" class="p-20 text-center text-gray-700 italic">No Active Manifests</td></tr>';
+        initAuth();
+
+        // --- FIRESTORE CRUD ---
+        function setupRealtimeListeners() {
+            if (!user) return;
+
+            // 1. Global Page Content - FIXED PATH for Canvas Standard
+            // Path: artifacts/{appId}/public/data/settings/global
+            const globalDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'global');
             
-            document.getElementById('guest-count').innerText = String(reservationData.length).padStart(2, '0');
+            onSnapshot(globalDocRef, (snap) => {
+                if (snap.exists()) {
+                    const data = snap.data();
+                    siteData.hero = data.hero || siteData.hero;
+                    siteData.about = data.about || siteData.about;
+                    siteData.contact = data.contact || siteData.contact;
+                    syncPublicUI();
+                } else {
+                    // Initialize if empty
+                    setDoc(globalDocRef, { hero: siteData.hero, about: siteData.about, contact: siteData.contact });
+                }
+            }, (err) => console.error("Firestore Global Sync Error:", err));
+
+            // 2. Collections CRUD
+            const collections = ['team', 'menu', 'gallery', 'blog', 'reservations'];
+            collections.forEach(colName => {
+                const colRef = collection(db, 'artifacts', appId, 'public', 'data', colName);
+                onSnapshot(colRef, (snap) => {
+                    siteData[colName] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                    syncPublicUI();
+                    if (document.getElementById('admin-console').style.display === 'flex') {
+                        refreshAdminConsole();
+                    }
+                }, (err) => console.error(`Firestore ${colName} Sync Error:`, err));
+            });
         }
 
-        // --- NAVIGATION LOGIC ---
-        function initNavigation() {
-            const menuToggle = document.getElementById('menu-toggle');
-            const mobileMenu = document.getElementById('mobile-menu');
-            const menuIcon = document.getElementById('menu-icon');
-            const navLinks = document.querySelectorAll('.mobile-nav-link');
+        // --- PUBLIC ACTIONS ---
+        window.handlePublicBooking = async (e) => {
+            e.preventDefault();
+            if (!user) return;
 
-            // Toggle Menu
-            menuToggle.addEventListener('click', () => {
-                const isActive = mobileMenu.classList.toggle('active');
-                if (isActive) {
-                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>`;
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8h16M4 16h16"></path>`;
-                    document.body.style.overflow = 'auto';
+            const bookingData = {
+                name: document.getElementById('res-name').value,
+                date: document.getElementById('res-date').value,
+                time: document.getElementById('res-time').value,
+                email: document.getElementById('res-email').value,
+                guests: document.getElementById('res-guests').value,
+                createdAt: Date.now()
+            };
+
+            try {
+                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'reservations');
+                await addDoc(colRef, bookingData);
+                document.getElementById('booking-msg').classList.remove('hidden');
+                e.target.reset();
+                setTimeout(() => document.getElementById('booking-msg').classList.add('hidden'), 5000);
+            } catch (err) { console.error("Booking Error:", err); }
+        };
+
+        // --- ADMIN CRUD HELPERS ---
+        window.updateItemField = async (col, id, field, val) => {
+            if (!user) return;
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', col, id);
+            await updateDoc(docRef, { [field]: val });
+        };
+
+        window.addTeamMember = async () => {
+            const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'team');
+            await addDoc(colRef, { name: "New Member", role: "Chef", bio: "Bio here", img: "https://images.unsplash.com/photo-1583394238712-92d44443c5a0?auto=format&fit=crop&q=80&w=800" });
+        };
+
+        window.addMenuItem = async () => {
+            const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'menu');
+            await addDoc(colRef, { title: "New Dish", desc: "Ingredients", tag: "Seasonal", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=800" });
+        };
+
+        window.addGalleryImage = async () => {
+            const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'gallery');
+            await addDoc(colRef, { img: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&q=80&w=800", caption: "Atmosphere" });
+        };
+
+        window.addBlogPost = async () => {
+            const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'blog');
+            await addDoc(colRef, { title: "New Story", excerpt: "Summary...", date: "FEB 2026", img: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=1000" });
+        };
+
+        window.removeItem = async (col, id) => {
+            if (!confirm('Are you sure?')) return;
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', col, id);
+            await deleteDoc(docRef);
+        };
+
+        window.saveGlobalContent = async () => {
+            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'global');
+            const data = {
+                hero: {
+                    title: document.getElementById('edit-hero-title').value,
+                    sub: document.getElementById('edit-hero-sub').value,
+                    tagline: document.getElementById('edit-hero-tagline').value,
+                    img: document.getElementById('edit-hero-img').value
+                },
+                about: {
+                    tag: document.getElementById('edit-about-tag').value,
+                    title: document.getElementById('edit-about-title').value,
+                    desc: document.getElementById('edit-about-desc').value,
+                    img: document.getElementById('edit-about-img').value
+                },
+                contact: {
+                    address: document.getElementById('edit-contact-address').value,
+                    phone: document.getElementById('edit-contact-phone').value,
+                    email: document.getElementById('edit-contact-email').value,
+                    hoursWeek: siteData.contact.hoursWeek,
+                    hoursWeekend: siteData.contact.hoursWeekend
                 }
-            });
+            };
+            await setDoc(docRef, data);
+            
+            const btn = document.querySelector('[onclick="saveGlobalContent()"]');
+            btn.innerText = "SUCCESSFULLY SAVED";
+            setTimeout(() => btn.innerText = "Apply All Page Changes", 2000);
+        };
 
-            // Close on Link Click
-            navLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    mobileMenu.classList.remove('active');
-                    menuIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 8h16M4 16h16"></path>`;
-                    document.body.style.overflow = 'auto';
-                });
-            });
+        // --- UI SYNC ---
+        let gallerySwiper;
 
-            // Scroll Styles
-            window.addEventListener('scroll', () => {
-                const nav = document.getElementById('navbar');
-                if(window.scrollY > 50) {
-                    nav.classList.add('bg-midnight/80', 'backdrop-blur-xl', 'py-4', 'border-b', 'border-gold/10');
-                    nav.classList.remove('py-8');
-                } else {
-                    nav.classList.remove('bg-midnight/80', 'backdrop-blur-xl', 'border-b', 'border-gold/10');
-                    nav.classList.add('py-8');
-                }
+        window.syncPublicUI = () => {
+            document.getElementById('hero-title-text').innerText = siteData.hero.title;
+            document.getElementById('hero-sub-text').innerText = siteData.hero.sub;
+            document.getElementById('hero-tagline-text').innerText = siteData.hero.tagline;
+            document.getElementById('hero-img-bg').src = siteData.hero.img;
+            
+            document.getElementById('about-tag').innerText = siteData.about.tag;
+            document.getElementById('about-title-text').innerText = siteData.about.title;
+            document.getElementById('about-desc-text').innerText = siteData.about.desc;
+            document.getElementById('about-img').src = siteData.about.img;
+            
+            document.getElementById('footer-address').innerText = siteData.contact.address;
+            document.getElementById('footer-phone').innerText = siteData.contact.phone;
+            document.getElementById('footer-email').innerText = siteData.contact.email;
+            document.getElementById('footer-hours-week').innerText = siteData.contact.hoursWeek;
+            document.getElementById('footer-hours-weekend').innerText = siteData.contact.hoursWeekend;
+
+            document.getElementById('public-team-grid').innerHTML = siteData.team.map(t => `
+                <div class="chef-card reveal group">
+                    <div class="aspect-[3/4] overflow-hidden"><img src="${t.img}" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"></div>
+                    <div class="p-8">
+                        <span class="text-[9px] text-gold uppercase tracking-[0.3em] font-light mb-2 block">${t.role}</span>
+                        <h4 class="text-3xl serif text-white mb-4">${t.name}</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed font-light">${t.bio}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('public-menu-grid').innerHTML = siteData.menu.map(m => `
+                <div class="menu-card reveal">
+                    <div class="aspect-[4/5]"><img src="${m.img}" class="w-full h-full object-cover"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent flex flex-col justify-end p-8">
+                        <span class="text-[8px] text-gold uppercase mb-2 tracking-widest">${m.tag}</span>
+                        <h4 class="text-2xl serif text-white">${m.title}</h4>
+                        <p class="text-[10px] text-gray-400 uppercase tracking-widest">${m.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('public-gallery-grid').innerHTML = siteData.gallery.map(g => `
+                <div class="swiper-slide h-full">
+                    <div class="gallery-card h-full">
+                        <img src="${g.img}" class="h-full w-full object-cover">
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('public-blog-grid').innerHTML = siteData.blog.map(b => `
+                <div class="blog-card reveal group">
+                    <div class="aspect-video overflow-hidden"><img src="${b.img}" class="w-full h-full object-cover"></div>
+                    <div class="p-8 bg-black/40 backdrop-blur-sm border-t border-white/5">
+                        <span class="text-[8px] text-gold uppercase tracking-widest">${b.date}</span>
+                        <h4 class="text-2xl serif text-white mt-2 mb-4 group-hover:text-gold transition-colors">${b.title}</h4>
+                        <p class="text-xs text-gray-400 mb-6 font-light leading-relaxed line-clamp-2">${b.excerpt}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            initSwiper();
+        };
+
+        window.refreshAdminConsole = () => {
+            document.getElementById('stat-pending').innerText = siteData.reservations.length;
+            document.getElementById('stat-menu').innerText = siteData.menu.length;
+            document.getElementById('stat-team').innerText = siteData.team.length;
+            document.getElementById('stat-blog').innerText = siteData.blog.length;
+
+            const resList = document.getElementById('res-list');
+            resList.innerHTML = siteData.reservations.length === 0 ? '<p class="text-center py-10 opacity-30 text-xs tracking-widest">No pending reservations</p>' : 
+                siteData.reservations.map(r => `
+                    <div class="admin-card flex justify-between items-center">
+                        <div>
+                            <p class="text-white text-sm font-bold">${r.name}</p>
+                            <p class="text-[9px] text-gray-500 uppercase">${r.date} @ ${r.time} • ${r.guests} Guests • ${r.email}</p>
+                        </div>
+                        <button onclick="removeItem('reservations', '${r.id}')" class="text-red-500 text-[9px] font-bold uppercase hover:underline">Delete</button>
+                    </div>
+                `).join('');
+
+            document.getElementById('team-list').innerHTML = siteData.team.map(t => `
+                <div class="admin-card flex flex-col space-y-4">
+                    <img src="${t.img}" class="w-full h-40 object-cover rounded opacity-80">
+                    <div class="space-y-2">
+                        <div class="input-group"><label>Name</label><input type="text" value="${t.name}" onchange="updateItemField('team', '${t.id}', 'name', this.value)"></div>
+                        <div class="input-group"><label>Role</label><input type="text" value="${t.role}" onchange="updateItemField('team', '${t.id}', 'role', this.value)"></div>
+                        <div class="input-group"><label>Img URL</label><input type="text" value="${t.img}" onchange="updateItemField('team', '${t.id}', 'img', this.value)"></div>
+                        <div class="input-group"><label>Bio</label><textarea rows="2" onchange="updateItemField('team', '${t.id}', 'bio', this.value)">${t.bio}</textarea></div>
+                    </div>
+                    <button onclick="removeItem('team', '${t.id}')" class="text-red-500 text-[9px] uppercase font-bold text-left pt-2">Delete Member</button>
+                </div>
+            `).join('');
+
+            document.getElementById('menu-list').innerHTML = siteData.menu.map(m => `
+                <div class="admin-card space-y-3">
+                    <img src="${m.img}" class="w-full h-32 object-cover rounded opacity-80 mb-2">
+                    <div class="input-group"><label>Category</label><input type="text" value="${m.tag}" onchange="updateItemField('menu', '${m.id}', 'tag', this.value)"></div>
+                    <div class="input-group"><label>Dish Name</label><input type="text" value="${m.title}" onchange="updateItemField('menu', '${m.id}', 'title', this.value)"></div>
+                    <div class="input-group"><label>Desc</label><input type="text" value="${m.desc}" onchange="updateItemField('menu', '${m.id}', 'desc', this.value)"></div>
+                    <div class="input-group"><label>Img URL</label><input type="text" value="${m.img}" onchange="updateItemField('menu', '${m.id}', 'img', this.value)"></div>
+                    <button onclick="removeItem('menu', '${m.id}')" class="text-red-500 text-[9px] uppercase font-bold pt-2">Delete Dish</button>
+                </div>
+            `).join('');
+
+            document.getElementById('gallery-list').innerHTML = siteData.gallery.map(g => `
+                <div class="admin-card p-2 relative group overflow-hidden">
+                    <img src="${g.img}" class="w-full h-32 object-cover">
+                    <div class="absolute inset-0 bg-black/80 flex flex-col p-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="input-group mb-4"><label>Img URL</label><input type="text" value="${g.img}" onchange="updateItemField('gallery', '${g.id}', 'img', this.value)"></div>
+                        <button onclick="removeItem('gallery', '${g.id}')" class="bg-red-600 text-white p-2 rounded text-[8px] uppercase font-bold">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('blog-list').innerHTML = siteData.blog.map(b => `
+                <div class="admin-card grid md:grid-cols-4 gap-6">
+                    <div class="col-span-1"><img src="${b.img}" class="w-full h-32 object-cover rounded"></div>
+                    <div class="col-span-3 space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="input-group"><label>Title</label><input type="text" value="${b.title}" onchange="updateItemField('blog', '${b.id}', 'title', this.value)"></div>
+                            <div class="input-group"><label>Date</label><input type="text" value="${b.date}" onchange="updateItemField('blog', '${b.id}', 'date', this.value)"></div>
+                        </div>
+                        <div class="input-group"><label>Img URL</label><input type="text" value="${b.img}" onchange="updateItemField('blog', '${b.id}', 'img', this.value)"></div>
+                        <div class="input-group"><label>Excerpt</label><textarea rows="2" onchange="updateItemField('blog', '${b.id}', 'excerpt', this.value)">${b.excerpt}</textarea></div>
+                        <button onclick="removeItem('blog', '${b.id}')" class="text-red-500 text-[9px] font-bold uppercase">Delete Post</button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Global settings form
+            document.getElementById('edit-hero-title').value = siteData.hero.title;
+            document.getElementById('edit-hero-sub').value = siteData.hero.sub;
+            document.getElementById('edit-hero-tagline').value = siteData.hero.tagline;
+            document.getElementById('edit-hero-img').value = siteData.hero.img;
+            document.getElementById('edit-about-tag').value = siteData.about.tag;
+            document.getElementById('edit-about-title').value = siteData.about.title;
+            document.getElementById('edit-about-desc').value = siteData.about.desc;
+            document.getElementById('edit-about-img').value = siteData.about.img;
+            document.getElementById('edit-contact-address').value = siteData.contact.address;
+            document.getElementById('edit-contact-phone').value = siteData.contact.phone;
+            document.getElementById('edit-contact-email').value = siteData.contact.email;
+        };
+
+        // UI Helpers
+        window.toggleView = (viewId) => {
+            document.getElementById('site-wrapper').style.display = 'none';
+            document.getElementById('admin-auth').style.display = 'none';
+            document.getElementById('admin-console').style.display = 'none';
+            
+            const target = document.getElementById(viewId);
+            if (viewId === 'admin-console') {
+                target.style.display = 'flex';
+                document.body.classList.remove('public-view');
+                refreshAdminConsole();
+            } else if (viewId === 'site-wrapper') {
+                target.style.display = 'block';
+                document.body.classList.add('public-view');
+                syncPublicUI();
+            } else {
+                target.style.display = 'flex';
+                document.body.classList.remove('public-view');
+            }
+        };
+
+        window.checkAuth = () => {
+            if (document.getElementById('admin-pass').value === '1234') toggleView('admin-console');
+        };
+
+        window.logout = () => {
+            toggleView('site-wrapper');
+            document.getElementById('admin-pass').value = '';
+        };
+
+        window.showTab = (tabId, el) => {
+            document.querySelectorAll('.admin-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            refreshAdminConsole();
+        };
+
+        function initSwiper() {
+            if (gallerySwiper) gallerySwiper.destroy();
+            gallerySwiper = new Swiper(".atmosphereSwiper", { 
+                slidesPerView: 1.2, centeredSlides: true, spaceBetween: 30, loop: true, autoplay: { delay: 5000 }, 
+                pagination: { el: ".swiper-pagination", clickable: true }, 
+                breakpoints: { 768: { slidesPerView: 2.2 } } 
             });
         }
 
         // --- ANIMATIONS ---
-        function initAnimations() {
+        window.onload = () => {
             gsap.registerPlugin(ScrollTrigger);
+            const tl = gsap.timeline();
+            tl.to('#loader-img', { opacity: 1, scale: 1, duration: 1.5, ease: "power2.out" })
+            .to('#loader-text-container', { opacity: 1, y: -10, duration: 1.2, ease: "power2.out" }, "-=0.8")
+            .to('#loader', { yPercent: -100, duration: 1.2, ease: "expo.inOut", delay: 0.8 })
+            .to('#main-nav', { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, "-=0.5")
+            .to('#hero-img-container', { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.8, ease: "expo.inOut" }, "-=1")
+            .to('#hero-img-bg', { scale: 1, duration: 2.5, ease: "expo.out" }, "-=2")
+            .to('#hero-sub-text, #hero-title-text, #hero-tagline-text', { y: 0, stagger: 0.2, duration: 1.2, ease: "power4.out" }, "-=1.5");
 
-            window.addEventListener('load', () => {
-                setTimeout(() => {
-                    gsap.to("#loader", { opacity: 0, duration: 1, onComplete: () => {
-                        document.getElementById('loader').style.display = 'none';
-                        startHeroAnimation();
-                    }});
-                }, 1000);
+            gsap.to('#progress-bar', { width: '100%', scrollTrigger: { trigger: 'body', start: 'top top', end: 'bottom bottom', scrub: 0.3 } });
+            
+            const cursor = document.getElementById('cursor'), follower = document.getElementById('cursor-follower');
+            document.addEventListener('mousemove', e => {
+                gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0 });
+                gsap.to(follower, { x: e.clientX - 20, y: e.clientY - 20, duration: 0.2 });
             });
-
-            function startHeroAnimation() {
-                const tl = gsap.timeline();
-                tl.to("#hero-eyebrow", { opacity: 1, y: -20, duration: 1, startAt: {y: 0} })
-                  .to("#hero-title", { opacity: 1, y: -20, duration: 1.2, startAt: {y: 0} }, "-=0.6")
-                  .to("#hero-text", { opacity: 1, y: -20, duration: 1, startAt: {y: 0} }, "-=0.8")
-                  .to("#hero-actions", { opacity: 1, y: -20, duration: 1, startAt: {y: 0} }, "-=0.8");
-            }
-
-            gsap.utils.toArray(".reveal-up").forEach(elem => {
-                gsap.fromTo(elem, { opacity: 0, y: 50 }, {
-                    opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
-                    scrollTrigger: { trigger: elem, start: "top 85%" }
-                });
-            });
-        }
-
-        // --- HANDLERS ---
-        function handleReservation() {
-            const name = document.getElementById('res-name').value;
-            const guests = document.getElementById('res-guests').value;
-            if(!name || name.length < 2) return;
-            const newRes = { name, guests, date: new Date().toLocaleTimeString() };
-            reservationData.unshift(newRes);
-            localStorage.setItem('orama_reservations', JSON.stringify(reservationData));
-            gsap.to("#res-form", { opacity: 0, duration: 0.5, onComplete: () => {
-                document.getElementById('res-form').classList.add('hidden');
-                document.getElementById('success-msg').classList.remove('hidden');
-            }});
-            renderReservations();
-        }
-
-        function deleteRes(idx) {
-            reservationData.splice(idx, 1);
-            localStorage.setItem('orama_reservations', JSON.stringify(reservationData));
-            renderReservations();
-        }
-
-        let clickCount = 0;
-        document.getElementById('footer-logo').addEventListener('click', () => {
-            clickCount++;
-            if(clickCount === 3) { clickCount = 0; toggleAdmin(); }
-            setTimeout(() => clickCount = 0, 2000);
-        });
-
-        function toggleAdmin() {
-            const panel = document.getElementById('admin-panel');
-            const isHidden = panel.classList.contains('hidden');
-            if(isHidden) {
-                panel.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-                gsap.fromTo(panel, { opacity: 0, y: 50 }, { opacity: 1, y: 0 });
-            } else {
-                gsap.to(panel, { opacity: 0, y: 50, onComplete: () => {
-                    panel.classList.add('hidden');
-                    document.body.style.overflow = 'auto';
-                }});
-            }
-        }
-
-        // Menu Filtering
-        document.querySelectorAll('.menu-filter').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const filter = e.target.dataset.filter;
-                document.querySelectorAll('.menu-filter').forEach(b => {
-                    b.classList.remove('gold-gradient-text');
-                    b.classList.add('text-gray-500');
-                });
-                e.target.classList.add('gold-gradient-text');
-                e.target.classList.remove('text-gray-500');
-                gsap.to(".menu-grid-item", { opacity: 0, scale: 0.9, duration: 0.3, onComplete: () => {
-                    document.querySelectorAll('.menu-grid-item').forEach(item => {
-                        item.style.display = (filter === 'all' || item.dataset.category === filter) ? 'block' : 'none';
-                    });
-                    gsap.to(".menu-grid-item", { opacity: 1, scale: 1, duration: 0.6, stagger: 0.05 });
-                }});
-            });
-        });
-
-        // --- INIT ---
-        renderMenu();
-        renderGallery();
-        renderReservations();
-        initAnimations();
-        initNavigation();
-
-        new Swiper('.mainSwiper', {
-            loop: true,
-            slidesPerView: 1.2,
-            centeredSlides: true,
-            spaceBetween: 20,
-            autoplay: { delay: 5000 },
-            pagination: { el: '.swiper-pagination', clickable: true },
-            navigation: { nextEl: '.swiper-nav-next', prevEl: '.swiper-nav-prev' },
-            breakpoints: { 1024: { slidesPerView: 1.8, spaceBetween: 40 } }
-        });
+        };
     </script>
 </body>
 </html>
